@@ -21,5 +21,5 @@ class TimeIntegration01:
     def time_doit(self):
         self.integral.doit()
 
-    def time_doit_meijerg():
+    def time_doit_meijerg(self):
         self.integral.doit(meijerg=True)
