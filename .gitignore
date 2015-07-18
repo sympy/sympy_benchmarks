@@ -1,1 +1,7 @@
-.cache
+*.pyc
+*/*.pyc
+*/*/*.pyc
+.cache/
+env/
+results/
+sympy/
