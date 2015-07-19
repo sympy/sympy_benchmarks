@@ -1,17 +1,18 @@
-chemreac benchmarks
-===================
+bjodah's SymPy benchmarks
+=========================
 
 .. image:: http://img.shields.io/badge/benchmarked%20by-asv-green.svg?style=flat
-   :target: http://hera.physchem.kth.se/~sympy_asv/sympy_benchmarks_bjodah
+   :target: http://hera.physchem.kth.se/~sympy_asv
    :alt: airspeedvelocity
+
+This is an inofficial benchmark suite `for SymPy <http://github.com/sympy/sympy>`__.
 
 These benchmarks track the performance of various features in SymPy
 *over time*.
 
 To view them, visit `this page
-<http://hera.physchem.kth.se/~sympy_asv/sympy_benchmarks_bjodah>`__.
+<http://hera.physchem.kth.se/~sympy_asv>`__.
 
 The benchmarks are run using `airspeed velocity
 <http://spacetelescope.github.io/asv>`__.
 
-This is an inofficial benchmark suite.
