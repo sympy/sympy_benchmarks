@@ -27,6 +27,14 @@ class TimeJacobian:
                                                 'u0, u1, u2, u3, u4, u5',
                                                 cls=sm.Function)]
 
+        subs = sm.symbols('s:{}'.format(len(self.states)))
+
+        self.subs = dict(zip(self.states, subs))
+
     def time_jacobian(self):
 
         self.matrix.jacobian(self.states)
+
+    def time_subs(self):
+
+        self.matrix.subs(self.subs)
