@@ -5,6 +5,10 @@ bjodah's SymPy benchmarks
    :target: http://hera.physchem.kth.se/~sympy_asv
    :alt: airspeedvelocity
 
+.. image:: https://travis-ci.org/bjodah/sympy_benchmarks_bjodah.png?branch=master
+   :target: https://travis-ci.org/bjodah/sympy_benchmarks_bjodah
+
+
 This is an inofficial benchmark suite `for SymPy <http://github.com/sympy/sympy>`__.
 
 These benchmarks track the performance of various features in SymPy
