@@ -15,7 +15,7 @@ def _load_matrix():
     return sm.sympify(txt)
 
 
-class TimeJacobian:
+class TimeLargeExpressionOperations:
 
     def setup(self):
 
@@ -36,5 +36,13 @@ class TimeJacobian:
         self.matrix.jacobian(self.states)
 
     def time_subs(self):
+
+        self.matrix.subs(self.subs)
+
+    def peakmem_jacobian(self):
+
+        self.matrix.jacobian(self.states)
+
+    def peakmem_subs(self):
 
         self.matrix.subs(self.subs)
