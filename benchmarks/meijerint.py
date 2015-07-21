@@ -63,11 +63,11 @@ class TimeMeijerint:
     def setup():
         pass
 
-    def time_001(self):
-        MT(x**nu*Heaviside(x - 1), x, s)
+    # def time_001(self):
+    #     MT(x**nu*Heaviside(x - 1), x, s)
 
-    def time_002(self):
-        MT(x**nu*Heaviside(1 - x), x, s)
+    # def time_002(self):
+    #     MT(x**nu*Heaviside(1 - x), x, s)
 
 #     def time_003(self):
 #         MT((1-x)**(beta - 1)*Heaviside(1-x), x, s)
@@ -183,11 +183,11 @@ class TimeMeijerint:
 #     def time_040(self):
 #         MT(exp(-x/2)*besselk(a, x/2), x, s)
 
-#     def time_041(self):
-#         LT((t-apos)**bpos*exp(-cpos*(t-apos))*Heaviside(t-apos), t, s)
+    def time_041(self):
+        LT((t-apos)**bpos*exp(-cpos*(t-apos))*Heaviside(t-apos), t, s)
 
-#     def time_042(self):
-#         LT(t**apos, t, s)
+    def time_042(self):
+        LT(t**apos, t, s)
 
 #     def time_043(self):
 #         LT(Heaviside(t), t, s)
