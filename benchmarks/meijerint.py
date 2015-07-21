@@ -60,7 +60,7 @@ def E(expr):
 
 class TimeMeijerint:
 
-    def setup():
+    def setup(self):
         pass
 
     # def time_001(self):
