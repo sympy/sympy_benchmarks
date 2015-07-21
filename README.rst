@@ -1,5 +1,5 @@
-bjodah's SymPy benchmarks
-=========================
+SymPy's benchmark suite
+=======================
 
 .. image:: http://img.shields.io/badge/benchmarked%20by-asv-green.svg?style=flat
    :target: http://hera.physchem.kth.se/~sympy_asv
@@ -9,13 +9,13 @@ bjodah's SymPy benchmarks
    :target: https://travis-ci.org/bjodah/sympy_benchmarks_bjodah
 
 
-This is an inofficial benchmark suite `for SymPy <http://github.com/sympy/sympy>`__.
+This is the benchmark suite for `SymPy <http://github.com/sympy/sympy>`__.
 
 These benchmarks track the performance of various features in SymPy
 *over time*.
 
-To view them, visit `this page
-<http://hera.physchem.kth.se/~sympy_asv>`__.
+Results are currently hosted in an ad hoc manner, you may find some reulsts `here
+<http://hera.physchem.kth.se/~sympy_asv>`__ and `here <http://www.moorepants.info/misc/sympy-asv/>`__.
 
 The benchmarks are run using `airspeed velocity
 <http://spacetelescope.github.io/asv>`__.
