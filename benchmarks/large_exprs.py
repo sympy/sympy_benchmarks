@@ -19,30 +19,44 @@ class TimeLargeExpressionOperations:
 
     def setup(self):
 
-        self.matrix = _load_matrix()
-
         t = sm.symbols('t')
 
-        self.states = [s(t) for s in sm.symbols('q0, q1, q2, q3, q4, q5, '
-                                                'u0, u1, u2, u3, u4, u5',
-                                                cls=sm.Function)]
+        self.funcs = [s(t) for s in sm.symbols('q:6, u:6', cls=sm.Function)]
 
-        subs = sm.symbols('s:{}'.format(len(self.states)))
+        self.syms = sm.symbols('x:{}'.format(len(self.funcs)))
 
-        self.subs = dict(zip(self.states, subs))
+        self.subs = dict(zip(self.funcs, self.syms))
 
-    def time_jacobian(self):
+        self.func_matrix = _load_matrix()
 
-        self.matrix.jacobian(self.states)
+        self.sym_matrix = self.func_matrix.subs(self.subs)
 
     def time_subs(self):
 
-        self.matrix.subs(self.subs)
-
-    def peakmem_jacobian(self):
-
-        self.matrix.jacobian(self.states)
+        self.func_matrix.subs(self.subs)
 
     def peakmem_subs(self):
 
-        self.matrix.subs(self.subs)
+        self.func_matrix.subs(self.subs)
+
+    def time_jacobian_wrt_functions(self):
+
+        self.func_matrix.jacobian(self.funcs)
+
+    def time_manual_jacobian_wrt_functions(self):
+
+        for expr in self.func_matrix:
+            for func in self.funcs:
+                expr.diff(func)
+
+    def time_jacobian_wrt_symbols(self):
+
+        self.sym_matrix.jacobian(self.syms)
+
+    def peakmem_jacobian_wrt_functions(self):
+
+        self.func_matrix.jacobian(self.funcs)
+
+    def peakmem_jacobian_wrt_symbols(self):
+
+        self.sym_matrix.jacobian(self.syms)
