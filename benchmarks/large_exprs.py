@@ -31,6 +31,11 @@ class TimeLargeExpressionOperations:
 
         self.sym_matrix = self.func_matrix.subs(self.subs)
 
+        self.long_expr = 0
+
+        for expr in self.sym_matrix[:]:
+            self.long_expr += expr
+
     def time_subs(self):
 
         self.func_matrix.subs(self.subs)
@@ -60,3 +65,7 @@ class TimeLargeExpressionOperations:
     def peakmem_jacobian_wrt_symbols(self):
 
         self.sym_matrix.jacobian(self.syms)
+
+    def time_cse(self):
+
+        sm.cse(self.long_expr)
