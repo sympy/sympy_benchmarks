@@ -4,6 +4,7 @@ python:
 install:
   - pip install -r requirements.txt
   - pip install asv
+  - cp .asv-machine.json ~
 script:
   - py.test
   - asv run

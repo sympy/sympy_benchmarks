@@ -1,0 +1,10 @@
+{
+    "travis": {
+        "arch": "x86_64", 
+        "cpu": "Dummy cpu", 
+        "machine": "dummy_hostname", 
+        "os": "Linux", 
+        "ram": "2049316"
+    }, 
+    "version": 1
+}
