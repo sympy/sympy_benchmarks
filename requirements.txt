@@ -1,1 +1,1 @@
-sympy>=0.7.6
+sympy
