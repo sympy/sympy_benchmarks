@@ -27,9 +27,15 @@ class TimeIntegration01:
         }
 
     def teardown(self):
-        for key, ref_val in self.ref.items():
-            if self.values[key] != ref_val:
-                raise ValueError("Incorrect result, invalid timing.")
+        for key, val in self.values.items():
+            try:
+                ref = self.ref[key]
+            except KeyError:
+                pass  # don't fail because of non-existent ref.
+            else:
+                if (ref - val).simplify() != 0:
+                    raise ValueError("Incorrect result, invalid timing:"
+                                     " %s != %s" % (ref, val))
 
     def time_doit(self):
         self.values['time_doit'] = self.integral.doit()
