@@ -7,6 +7,6 @@ install:
   - cp .asv-machine.json ~
 script:
   - py.test
-  - asv run
+  - asv run --show-stderr
 notifications:
   email: false
