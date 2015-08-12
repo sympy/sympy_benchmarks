@@ -32,3 +32,8 @@ class LogicSuite:
         for theory in self.theories:
             if not satisfiable(theory, algorithm='dpll2'):
                 raise ValueError("Function returned false")
+
+    def time_pycosat(self):
+        for theory in self.theories:
+            if not satisfiable(theory, algorithm='pycosat'):
+                raise ValueError("Function returned false")
