@@ -36,6 +36,8 @@ class TimeLargeExpressionOperations:
         for expr in self.sym_matrix[:]:
             self.long_expr += expr
 
+        self.super_long_expr = (self.long_expr * self.long_expr).expand()
+
     def time_subs(self):
 
         self.func_matrix.subs(self.subs)
@@ -69,3 +71,11 @@ class TimeLargeExpressionOperations:
     def time_cse(self):
 
         sm.cse(self.long_expr)
+
+    def time_free_symbols(self):
+
+        self.super_long_expr.free_symbols
+
+    def time_count_ops(self):
+
+        self.super_long_expr.count_ops()
