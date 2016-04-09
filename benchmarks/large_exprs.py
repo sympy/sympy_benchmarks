@@ -36,7 +36,7 @@ class TimeLargeExpressionOperations:
         for expr in self.sym_matrix[:]:
             self.long_expr += expr
 
-        self.super_long_expr = (self.long_expr * self.long_expr).expand()
+        self.super_long_expr = (self.sym_matrix[0, 0] ** 3).expand()
 
     def time_subs(self):
 
