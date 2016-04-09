@@ -58,7 +58,9 @@ class TimeSolve01:
 
 class TimeMatrixSolve:
 
-    def setup(self):
+    params = ['GE', 'LU' 'ADJ']
+
+    def setup(self, name):
 
         n = 3
 
@@ -69,22 +71,14 @@ class TimeMatrixSolve:
         self.A_sym = sympy.Matrix(n, n, lambda i, j:
                                   sympy.Symbol('a{}{}'.format(*sorted((i, j)))))
 
-    def time_solve_ge(self):
+    def time_solve(self, name):
 
-        self.A.solve(self.b, method='GE')
+        self.A.solve(self.b, method=name)
 
-    def time_solve_lu(self):
-
-        self.A.solve(self.b, method='LU')
-
-    def time_solve_adj(self):
-
-        self.A.solve(self.b, method='ADJ')
-
-    def time_lusolve(self):
+    def time_lusolve(self, name):
 
         self.A.LUsolve(self.b)
 
-    def time_cholesky_solve(self):
+    def time_cholesky_solve(self, name):
 
         self.A_sym.cholesky_solve(self.b)
