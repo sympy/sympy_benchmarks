@@ -34,7 +34,7 @@ class Suite:
         # Create the list of forces acting on the system
         self.fl = [(P, g * m * self.N.x)]
 
-    def lmethod(self):
+    def time_lagrangesmethod(self):
         # Create the equations of motion using lagranges method
         l = self.me.LagrangesMethod(self.L, [self.theta], forcelist=self.fl,
                                     frame=self.N)
