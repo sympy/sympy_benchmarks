@@ -1,4 +1,4 @@
-class Suite:
+class KanesMethodSuite:
     def setup(self):
         # This is taken from the example in KanesMethod docstring
         from sympy import symbols

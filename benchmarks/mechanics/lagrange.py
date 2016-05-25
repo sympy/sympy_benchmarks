@@ -1,4 +1,4 @@
-class Suite:
+class LagrangesMethodSuite:
     def setup(self):
         from sympy import symbols
         import sympy.physics.mechanics as me
