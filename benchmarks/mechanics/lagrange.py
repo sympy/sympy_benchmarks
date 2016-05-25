@@ -2,10 +2,9 @@ class LagrangesMethodSuite:
     def setup(self):
         from sympy import symbols
         import sympy.physics.mechanics as me
-        self.me = me
 
         # System state variables
-        self.theta = me.dynamicsymbols('theta')
+        theta = me.dynamicsymbols('theta')
         thetad = me.dynamicsymbols('theta', 1)
 
         # Other system variables
@@ -14,8 +13,8 @@ class LagrangesMethodSuite:
         # Set up the reference frames
         # Reference frame A set up in the plane perpendicular to the page
         # containing segment OP
-        self.N = me.ReferenceFrame('N')
-        A = self.N.orientnew('A', 'Axis', [self.theta, self.N.z])
+        N = me.ReferenceFrame('N')
+        A = N.orientnew('A', 'Axis', [theta, N.z])
 
         # Set up the points and particles
         O = me.Point('O')
@@ -24,18 +23,20 @@ class LagrangesMethodSuite:
         Pa = me.Particle('Pa', P, m)
 
         # Set up velocities
-        A.set_ang_vel(self.N, thetad * self.N.z)
-        O.set_vel(self.N, 0)
-        P.v2pt_theory(O, self.N, A)
+        A.set_ang_vel(N, thetad * N.z)
+        O.set_vel(N, 0)
+        P.v2pt_theory(O, N, A)
 
         # Set up the lagrangian
-        self.L = me.Lagrangian(self.N, Pa)
+        L = me.Lagrangian(N, Pa)
 
         # Create the list of forces acting on the system
-        self.fl = [(P, g * m * self.N.x)]
+        fl = [(P, g * m * N.x)]
+
+        # Create an instance of LagrangesMethod
+        self.l = me.LagrangesMethod(L, [theta], forcelist=fl,
+                                    frame=N)
 
     def time_lagrangesmethod(self):
         # Create the equations of motion using lagranges method
-        l = self.me.LagrangesMethod(self.L, [self.theta], forcelist=self.fl,
-                                    frame=self.N)
-        l.form_lagranges_equations()
+        self.l.form_lagranges_equations()
