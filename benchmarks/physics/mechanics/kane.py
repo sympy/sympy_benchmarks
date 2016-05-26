@@ -1,9 +1,10 @@
+from sympy import symbols
+import sympy.physics.mechanics as me
+
+
 class KanesMethodMassSpringDamper:
     def setup(self):
         # This is taken from the example in KanesMethod docstring
-        from sympy import symbols
-        import sympy.physics.mechanics as me
-
         # System state variables
         q, u = me.dynamicsymbols('q u')
         qd, ud = me.dynamicsymbols('q u', 1)
