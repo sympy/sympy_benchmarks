@@ -23,13 +23,12 @@ class KanesMethodMassSpringDamper:
         # Create the list of kinematic differential equations, force list and
         # list of bodies/particles
         kd = [qd - u]
-        self.FL = [(P, (-k * q - c * u) * N.x)]
-        self.BL = [pa]
+        self.force_list = [(P, (-k * q - c * u) * N.x)]
+        self.body_list = [pa]
 
         # Create an instance of KanesMethod
-        self.KM = me.KanesMethod(N, q_ind=[q], u_ind=[u],
-                                 kd_eqs=kd)
+        self.KM = me.KanesMethod(N, q_ind=[q], u_ind=[u], kd_eqs=kd)
 
     def time_kanesmethod_mass_spring_damper(self):
         # Create the equations of motion using kanes method
-        (fr, frstar) = self.KM.kanes_equations(self.BL, self.FL)
+        self.KM.kanes_equations(self.body_list, self.force_list)

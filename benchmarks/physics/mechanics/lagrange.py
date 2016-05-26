@@ -1,8 +1,9 @@
+from sympy import symbols
+import sympy.physics.mechanics as me
+
+
 class LagrangesMethodPendulum:
     def setup(self):
-        from sympy import symbols
-        import sympy.physics.mechanics as me
-
         # System state variables
         theta = me.dynamicsymbols('theta')
         thetad = me.dynamicsymbols('theta', 1)
@@ -44,9 +45,6 @@ class LagrangesMethodPendulum:
 
 class LagrangesMethodMassSpringDamper:
     def setup(self):
-        import sympy.physics.mechanics as me
-        from sympy import symbols
-
         # System state variables
         q = me.dynamicsymbols('q')
         qd = me.dynamicsymbols('q', 1)
