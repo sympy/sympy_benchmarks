@@ -1,4 +1,4 @@
-class KanesMethodSuite:
+class KanesMethodMassSpringDamper:
     def setup(self):
         # This is taken from the example in KanesMethod docstring
         from sympy import symbols
@@ -20,7 +20,6 @@ class KanesMethodSuite:
 
         pa = me.Particle('pa', P, m)
 
-
         # Create the list of kinematic differential equations, force list and
         # list of bodies/particles
         kd = [qd - u]
@@ -30,6 +29,7 @@ class KanesMethodSuite:
         # Create an instance of KanesMethod
         self.KM = me.KanesMethod(N, q_ind=[q], u_ind=[u],
                                  kd_eqs=kd)
-    def time_kanesmethod(self):
+
+    def time_kanesmethod_mass_spring_damper(self):
         # Create the equations of motion using kanes method
         (fr, frstar) = self.KM.kanes_equations(self.BL, self.FL)
