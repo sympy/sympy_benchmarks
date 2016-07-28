@@ -3,7 +3,7 @@
 import sympy
 
 class _Polynomial(object):
-    
+
     expr = None
     x = sympy.Symbol('x', real=True)
     x0 = sympy.symbols('x0', real=True)
@@ -54,3 +54,43 @@ class TimeSolve01:
 
     def time_solve_nocheck(self):
         sympy.solve(self.eqs, *self.p.c, check=False)
+
+
+def _matrix_solve_setup():
+
+        n = 3
+
+        A = sympy.Matrix(n, n, lambda i, j: sympy.Symbol('a{}{}'.format(i, j)))
+        b = sympy.Matrix(n, 1, lambda i, j: sympy.Symbol('b{}{}'.format(i, j)))
+        A_sym = sympy.Matrix(n, n, lambda i, j:
+                             sympy.Symbol('a{}{}'.format(*sorted((i, j)))))
+
+        return A, b, A_sym
+
+
+class TimeMatrixSolve:
+
+    params = ['GE', 'LU', 'ADJ']
+
+    def setup(self, name):
+
+        self.A, self.B, _ = _matrix_solve_setup()
+
+    def time_solve(self, name):
+
+        self.A.solve(self.b, method=name)
+
+
+class TimeMatrixSolve2:
+
+    def setup(self, name):
+
+        self.A, self.B, self.A_sym = _matrix_solve_setup()
+
+    def time_lusolve(self):
+
+        self.A.LUsolve(self.b)
+
+    def time_cholesky_solve(self):
+
+        self.A_sym.cholesky_solve(self.b)
