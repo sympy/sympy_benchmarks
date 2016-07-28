@@ -83,7 +83,7 @@ class TimeMatrixSolve:
 
 class TimeMatrixSolve2:
 
-    def setup(self, name):
+    def setup(self):
 
         self.A, self.B, self.A_sym = _matrix_solve_setup()
 
