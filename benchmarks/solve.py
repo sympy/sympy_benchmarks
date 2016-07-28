@@ -56,29 +56,41 @@ class TimeSolve01:
         sympy.solve(self.eqs, *self.p.c, check=False)
 
 
-class TimeMatrixSolve:
-
-    params = ['GE', 'LU' 'ADJ']
-
-    def setup(self, name):
+def _matrix_solve_setup():
 
         n = 3
 
-        self.A = sympy.Matrix(n, n,
-                              lambda i, j: sympy.Symbol('a{}{}'.format(i, j)))
-        self.b = sympy.Matrix(n, 1,
-                              lambda i, j: sympy.Symbol('b{}{}'.format(i, j)))
-        self.A_sym = sympy.Matrix(n, n, lambda i, j:
-                                  sympy.Symbol('a{}{}'.format(*sorted((i, j)))))
+        A = sympy.Matrix(n, n, lambda i, j: sympy.Symbol('a{}{}'.format(i, j)))
+        b = sympy.Matrix(n, 1, lambda i, j: sympy.Symbol('b{}{}'.format(i, j)))
+        A_sym = sympy.Matrix(n, n, lambda i, j:
+                             sympy.Symbol('a{}{}'.format(*sorted((i, j)))))
+
+        return A, b, A_sym
+
+
+class TimeMatrixSolve:
+
+    params = ['GE', 'LU', 'ADJ']
+
+    def setup(self, name):
+
+        self.A, self.B, _ = _matrix_solve_setup()
 
     def time_solve(self, name):
 
         self.A.solve(self.b, method=name)
 
-    def time_lusolve(self, name):
+
+class TimeMatrixSolve2:
+
+    def setup(self, name):
+
+        self.A, self.B, self.A_sym = _matrix_solve_setup()
+
+    def time_lusolve(self):
 
         self.A.LUsolve(self.b)
 
-    def time_cholesky_solve(self, name):
+    def time_cholesky_solve(self):
 
         self.A_sym.cholesky_solve(self.b)
