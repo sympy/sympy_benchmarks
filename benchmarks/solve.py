@@ -74,7 +74,7 @@ class TimeMatrixSolve:
 
     def setup(self, name):
 
-        self.A, self.B, _ = _matrix_solve_setup()
+        self.A, self.b, _ = _matrix_solve_setup()
 
     def time_solve(self, name):
 
@@ -85,7 +85,7 @@ class TimeMatrixSolve2:
 
     def setup(self):
 
-        self.A, self.B, self.A_sym = _matrix_solve_setup()
+        self.A, self.b, self.A_sym = _matrix_solve_setup()
 
     def time_lusolve(self):
 
