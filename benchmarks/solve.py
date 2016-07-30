@@ -47,7 +47,7 @@ def _mk_eqs(wy=3, **kwargs):
 class TimeSolve01:
 
     def setup(self):
-        self.eqs, self.p, self.y = _mk_eqs()
+        self.eqs, self.p, self.y = _mk_eqs(2)  # running with wy=3 is too slow (~5s)
 
     def time_solve(self):
         sympy.solve(self.eqs, *self.p.c)
