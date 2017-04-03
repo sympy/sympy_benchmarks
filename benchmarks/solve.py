@@ -100,7 +100,7 @@ class TimeMatrixOperations:
     params = ((3,6,10), (0, 2, 5))
 
     def setup(self, n, num_symbols):
-        from sympy import Matrix
+        from sympy import Matrix, Symbol
 
         # every test will be based of a submatrix of this matrix
         big_mat = Matrix([[3, 8, 10, 5, 10, 7, 10, 10, 8, 6], [10, 9, 3, 7, 10, 1, 4, 2, 8, 1], [5, 9, 9, 0, 2, 10, 5, 9, 3, 9], [1, 8, 0, 7, 8, 8, 0, 4, 1, 10], [6, 5, 3, 0, 3, 4, 6, 1, 10, 5], [7, 10, 8, 9, 10, 7, 2, 8, 3, 2], [10, 8, 5, 10, 3, 5, 10, 4, 2, 3], [8, 4, 10, 9, 1, 9, 7, 4, 8, 6], [6, 2, 4, 1, 1, 0, 1, 3, 1, 9], [9, 2, 6, 10, 9, 4, 10, 2, 1, 8]])
