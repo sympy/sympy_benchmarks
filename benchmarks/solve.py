@@ -121,17 +121,17 @@ class TimeMatrixOperations:
     def time_rref(self, n, num_symbols):
         self.A.rref()
 
-    def test_det(self, n, num_symbols):
+    def time_det(self, n, num_symbols):
         self.A.det()
 
-    def test_det_bareiss(self, n, num_symbols):
+    def time_det_bareiss(self, n, num_symbols):
         self.A.det(method='bareiss')
 
-    def test_det_berkowitz(self, n, num_symbols):
+    def time_det_berkowitz(self, n, num_symbols):
         self.A.det(method='berkowitz')
 
-    def test_dense_multiply(self, n, num_symbols):
+    def time_dense_multiply(self, n, num_symbols):
         self.A * self.A
 
-    def test_dense_add(self, n, num_symbols):
+    def time_dense_add(self, n, num_symbols):
         self.A + self.A
