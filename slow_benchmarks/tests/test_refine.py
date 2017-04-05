@@ -3,7 +3,7 @@ from __future__ import absolute_import
 import sympy
 from sympy import dsolve, Eq, exp
 
-from benchmarks.refine import _mk_piecewise_01
+from slow_benchmarks.refine import _mk_piecewise_01
 
 def test_mk_piecewise_01():
     eq, params = _mk_piecewise_01()
