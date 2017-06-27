@@ -13,18 +13,22 @@ def _get_args_exprs():
 
 class TimeLambdifyCreation:
 
-    def setup(self):
+    params = ((['math'], ['numpy']),)
+
+    def setup(self, modules):
         self.args, self.exprs = _get_args_exprs()
 
-    def time_lambdify_create(self):
-        sp.lambdify(self.args, self.exprs)
+    def time_lambdify_create(self, modules):
+        sp.lambdify(self.args, self.exprs, modules=modules)
 
 
 class TimeLambdifyEvaluate:
 
-    def setup(self):
-        self.lmb = sp.lambdify(*_get_args_exprs())
+    params = ((['math'], ['numpy']),)
+
+    def setup(self, modules):
+        self.lmb = sp.lambdify(*_get_args_exprs(), modules=modules)
         self.inp = [1]*28
 
-    def time_lambdify_evaluate(self):
+    def time_lambdify_evaluate(self, modules):
         self.lmb(*self.inp)
