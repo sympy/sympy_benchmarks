@@ -33,6 +33,7 @@ class TimeSum:
         self.expr.doit()
 
 
-mytime = TimeSum()
-mytime.setup()
-mytime.time_doit()
+if __name__ == '__main__':
+    mytime = TimeSum()
+    mytime.setup()
+    mytime.time_doit()
