@@ -17,8 +17,6 @@ def test_make_integral_01():
     refined_eq = integral.subs({l: k}).doit()
     assert (refined_eq - ref_eq).simplify() == 0
 
-    eq_assumption = sympy.Q.is_true(sympy.Eq(l, k))
-    refined_neq = sympy.refine(intgr, ~eq_assumption).simplify()
-    print(refined_neq)
-    print(ref_neq)
+    eq_assumption = sympy.Q.is_true(sympy.Ne(l, k))
+    refined_neq = sympy.refine(intgr, eq_assumption).simplify()
     assert (refined_neq - ref_neq).simplify() == 0
