@@ -1,4 +1,4 @@
-from sympy import MatrixSymbol, Add, MatAdd, Mul, MatMul, Symbol
+from sympy import MatrixSymbol, Add, MatAdd, Mul, MatMul, Symbol, Matrix
 
 n = Symbol('n')
 
@@ -33,14 +33,14 @@ class TimeMatrixExpression:
 
 class TimeDiagonalEigenvals:
     def setup(self):
-        n = 20
-
-        M = []
-        for i in range(n):
-            row = [j for j in range(i)] + [Symbol('x'+str(i))] + [0]*(n-i-1)
-            M.append(row)
-
-        self.M = Matrix(M)
+        def entry(i, j):
+            if i == j:
+                return Symbol('x'+str(i))
+            elif i > j:
+                return j
+            else:
+                return 0
+        self.M = Matrix(20, 20, entry)
 
     def time_eigenvals(self):
         self.M.eigenvals()
