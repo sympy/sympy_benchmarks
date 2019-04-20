@@ -1,6 +1,6 @@
-from sympy import MatrixSymbol, Add, MatAdd, Mul, MatMul, symbols
+from sympy import MatrixSymbol, Add, MatAdd, Mul, MatMul, Symbol
 
-n = symbols('n')
+n = Symbol('n')
 
 A = MatrixSymbol("A", n, n)
 B = MatrixSymbol("B", n, n)
