@@ -18,7 +18,7 @@ Results are currently hosted in an ad hoc manner, you may find some results `her
 <http://hera.physchem.kth.se/~sympy_asv>`__ and `here <http://www.moorepants.info/misc/sympy-asv/>`__.
 
 The benchmarks are run using `airspeed velocity
-<http://spacetelescope.github.io/asv>`__.
+<https://asv.readthedocs.io/>`__.
 
 When adding benchmarks, mirror the SymPy directory tree for the feature you are
 adding. If your benchmark is not for a specific feature such that creating
