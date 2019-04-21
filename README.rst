@@ -40,28 +40,24 @@ or in conda environment, use
 
 ``conda install -c conda-forge asv``
 
-And then you may also need to install ``virtualenv``. Because we have
-``"environment_type": "virtualenv"`` in ``asf.conf.json``.
+If you're not using conda, you may also need to install ``virtualenv``.
 
 ``pip install virtualenv``
 
-or in conda environment, use
-
-``conda install -c conda-forge virtualenv`` to install the dependency.
 
 Running the benchmarks
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Use ``asv run`` command to run the benchmarks.
+To quickliy try out the benchmarks (e.g. while developing a new benchmark you can
+run it against a single commit on sympy master::
 
-Or alternatively, you may use ``asv run --quick`` to try out the benchmarks
-quickly, if it is slow.
+  $ ./run_benchmarks.sh --quick "HEAD^!"
 
 You may also use ``asv run --bench <Name>`` to selectively run a specific
 benchmark based on the function or class name in ``benchmarks/`` or
 ``slow_benchmarks/`` folder. It also supports regular expressions.
 
-The benchmark results will be stored in your ``reports/`` folder.
+The benchmark results will be stored in your ``results/`` folder.
 
 See `asv documentation <https://asv.readthedocs.io/en/stable/commands.html#asv-run>`__
 for additional information.
