@@ -35,12 +35,12 @@ class TimeDiagonalEigenvals:
     def setup(self):
         def entry(i, j):
             if i == j:
-                return Symbol('x'+str(i))
+                return i
             elif i > j:
                 return j
             else:
                 return 0
-        self.M = Matrix(20, 20, entry)
+        self.M = Matrix(5, 5, entry)
 
     def time_eigenvals(self):
         self.M.eigenvals()
