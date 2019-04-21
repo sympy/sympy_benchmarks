@@ -48,7 +48,7 @@ If you're not using conda, you may also need to install ``virtualenv``.
 Running the benchmarks
 ^^^^^^^^^^^^^^^^^^^^^^
 
-To quickliy try out the benchmarks (e.g. while developing a new benchmark you can
+To quickly try out the benchmarks (e.g. while developing a new benchmark you can
 run it against a single commit on sympy master::
 
   $ ./run_benchmarks.sh --quick "HEAD^!"
