@@ -1,12 +1,10 @@
 language: python
 python:
-  - "2.7"
+  - "3.7"
 install:
-  - pip install -r requirements.txt
-  - pip install asv virtualenv
-  - cp .asv-machine.json ~
+  - pip install virtualenv https://github.com/airspeed-velocity/asv/archive/master.tar.gz
+  - cp .ci/.asv-machine.json ~
 script:
-  - py.test
-  - asv run --config asv.conf.venv.json --show-stderr
+  - .ci/run_ci.sh
 notifications:
   email: false
