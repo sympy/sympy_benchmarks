@@ -1,3 +1,5 @@
+dist: xenial  # py37, cf. https://github.com/travis-ci/travis-ci/issues/9815
+sudo: yes     # py37, cf. https://github.com/travis-ci/travis-ci/issues/9815
 language: python
 python:
   - "3.7"
