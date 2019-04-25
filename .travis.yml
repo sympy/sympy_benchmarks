@@ -8,11 +8,11 @@ install:
   - cp .ci/.asv-machine.json ~
   - git clone --bare git://github.com/sympy/sympy sympy  # asv uses --bare
 script:
-  - .ci/run_ci.sh master
-  - .ci/run_ci.sh 1.4
-  - .ci/run_ci.sh 1.3
-  - .ci/run_ci.sh 1.2
-  - .ci/run_ci.sh 1.1.1
-  - .ci/run_ci.sh 1.0
+  - .ci/run_ci.sh master      || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.4   || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.3   || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.2   || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.1.1 || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.0   || travis_terminate 1;
 notifications:
   email: false
