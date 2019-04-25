@@ -1,6 +1,6 @@
 #!/bin/bash -eu
-if [[ "$TRAVIS" == "true" ]]; then echo -en "travis_fold:start:test-${tag}\\r"; fi
 tag=$1
+if [[ "$TRAVIS" == "true" ]]; then echo -en "travis_fold:start:test-${tag}\\r"; fi
 python3 -m virtualenv /tmp/venv-${tag}
 echo "Running the benchmark test suite for ${tag}..."
 bash -c "source /tmp/venv-${tag}/bin/activate; pip install pytest ${tag//-/==} && pytest -rs"
