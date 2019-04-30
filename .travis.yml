@@ -1,12 +1,19 @@
+dist: xenial  # py37, cf. https://github.com/travis-ci/travis-ci/issues/9815
+sudo: yes     # py37, cf. https://github.com/travis-ci/travis-ci/issues/9815
 language: python
 python:
-  - "2.7"
+  - "3.7"
 install:
-  - pip install -r requirements.txt
-  - pip install asv virtualenv
-  - cp .asv-machine.json ~
+  - pip install virtualenv https://github.com/airspeed-velocity/asv/archive/master.tar.gz
+  - cp .ci/.asv-machine.json ~
+  - git clone --bare git://github.com/sympy/sympy sympy  # asv uses --bare
 script:
-  - py.test
-  - asv run --config asv.conf.venv.json --show-stderr
+  - .ci/run_ci.sh master      || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.4   || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.3   || travis_terminate 1;
+  - .ci/run_ci.sh sympy-1.2   || travis_terminate 1;
+# TODO: enable for older versions:
+#  - .ci/run_ci.sh sympy-1.1.1 || travis_terminate 1;
+#  - .ci/run_ci.sh sympy-1.0   || travis_terminate 1;
 notifications:
   email: false

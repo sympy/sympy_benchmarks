@@ -2,7 +2,7 @@
     "travis": {
         "arch": "x86_64", 
         "cpu": "Dummy cpu", 
-        "machine": "dummy_hostname", 
+        "machine": "travis_dummy_machine", 
         "os": "Linux", 
         "ram": "2049316"
     }, 
