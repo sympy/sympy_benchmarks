@@ -48,7 +48,7 @@ run it against a single commit on sympy master:
 $ asv --quick "HEAD^!"
 ```
 
-If you work with `conda` , you should change the *"environment_type"* entry in `asv.conf.json` from *"virtualenv"* to *"conda"*. Or you can use,
+If you work with `conda` , you should change the `"environment_type"` entry in `asv.conf.json` from `"virtualenv"` to `"conda"`. Or you can use,
 
 ```
 $ asv --config asv.conf.conda.json --quick "HEAD^!"
@@ -68,7 +68,7 @@ See [asv documentation](https://asv.readthedocs.io/en/stable/commands.html#asv-r
 
 #### Running the benchmarks locally
 
-Currently, this suite is pointing to SymPy's base repository for benchmarking. In order to run these benchmarks on your local checkout, you will need to change the value of the *"repo"* entry in `asv.conf.json` and `asv.conf.conda.json` files, from the base repository's url to your local directory where your fork is stored.
+Currently, this suite is pointing to SymPy's base repository for benchmarking. In order to run these benchmarks on your local checkout, you will need to change the value of the `"repo"` entry in `asv.conf.json` and `asv.conf.conda.json` files, from the base repository's url to your local directory where your fork is stored.
 
 This value should be a path, relative to the location of `asv.conf.json` config file.
 
@@ -94,7 +94,7 @@ Then you need to run `asv compare` on them.
 $ asv compare COMMIT1 COMMIT2
 ```
 
-here `commit` can be replaced with branch names.
+here `commit` can be replaced with branch names or commit hashes.
 
 #### Running benchmarks for a selection of commits
 
