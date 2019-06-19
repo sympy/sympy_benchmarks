@@ -96,6 +96,8 @@ $ asv compare COMMIT1 COMMIT2
 
 here `commit` can be replaced with branch names or commit hashes.
 
+If you are comparing the benchmarks of a branch against master, use the commit hash of the master that branch is based on. Otherwise, new unrelated commits in the master can affect the results. Alternately you can also merge master into the branch first to make sure it is up-to-date.
+
 #### Running benchmarks for a selection of commits
 
 Generally we're not interested in benchmarking every single commit to the sympy repo.
