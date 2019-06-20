@@ -91,17 +91,6 @@ If you are comparing the benchmarks of a branch against master, use the commit h
 
 Running benchmarks for a selection of commits
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Generally we're not interested in benchmarking every single commit to the sympy repo. For example, we might be interested in some tagged releases:
-
-   $ for release in 1.0 1.1 1.2 1.3 1.4; do asv run "sympy-$release^!"; done
-
-or all the merge commits to the master branch since some tag:
-
-   $ git rev-list --merges sympy-1.0..HEAD
-
-
-Running benchmarks for a selection of commits
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 Generally we're not interested in benchmarking every single commit to the sympy repo.
 For example, we might be interested in some tagged releases::
 
