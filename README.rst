@@ -65,7 +65,7 @@ See `asv documentation <https://asv.readthedocs.io/en/stable/commands.html#asv-r
 
 Running the benchmarks locally
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Currently, this suite is pointing to SymPy's base repository for benchmarking. In order to run these benchmarks on your local checkout, you will need to change the value of the ``"repo"`` entry in ``asv.conf.venv.json ``and ``asv.conf.conda.json`` files, from the base repository's url to your local directory where your fork is stored.
+Currently, this suite is pointing to SymPy's base repository for benchmarking. In order to run these benchmarks on your local checkout, you will need to change the value of the ``"repo"`` entry in ``asv.conf.venv.json`` and ``asv.conf.conda.json`` files, from the base repository's url to your local directory where your fork is stored.
 
 This value should be a path, relative to the location of ``asv.conf.conda.json`` config file.
 
