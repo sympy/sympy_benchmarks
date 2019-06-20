@@ -1,4 +1,4 @@
-SymPy's benchmark suite
+SymPy's Benchmark Suite
 =======================
 
 .. image:: http://img.shields.io/badge/benchmarked%20by-asv-green.svg?style=flat
@@ -32,17 +32,17 @@ Quickstart
 Installation
 ^^^^^^^^^^^^
 
-Firstly, you need to install ``asv``
+These benchmarks are run using *airspeed velocity*,so you need to have ``asv`` installed  ::
 
-``pip install asv``
+  $ pip install asv
 
-or in conda environment, use
+or in conda environment, use  ::
 
-``conda install -c conda-forge asv``
+  $ conda install -c conda-forge asv
 
-If you're not using conda, you may also need to install ``virtualenv``.
+If you're not using conda, you also needs to have ``virtualenv`` installed.  ::
 
-``pip install virtualenv``
+  $ pip install virtualenv
 
 
 Running the benchmarks
@@ -53,14 +53,52 @@ run it against a single commit on sympy master::
 
   $ ./run_benchmarks.sh --quick "HEAD^!"
 
-You may also use ``asv run --bench <Name>`` to selectively run a specific
-benchmark based on the function or class name in ``benchmarks/`` or
-``slow_benchmarks/`` folder. It also supports regular expressions.
+You can also run a specific benchmark based on the function or class name in ``benchmarks/`` or ``slow_benchmarks/`` folder.  ::
+
+  $ asv run --bench <Name>
+
+It also supports regular expressions.
 
 The benchmark results will be stored in your ``results/`` folder.
 
-See `asv documentation <https://asv.readthedocs.io/en/stable/commands.html#asv-run>`__
-for additional information.
+See `asv documentation <https://asv.readthedocs.io/en/stable/commands.html#asv-run>`__ for additional information.
+
+Running the benchmarks locally
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Currently, this suite is pointing to SymPy's base repository for benchmarking. In order to run these benchmarks on your local checkout, you will need to change the value of the ``"repo"`` entry in ``asv.conf.venv.json ``and ``asv.conf.conda.json`` files, from the base repository's url to your local directory where your fork is stored.
+
+This value should be a path, relative to the location of ``asv.conf.conda.json`` config file.
+
+E.g., if your ``sympy`` fork and ``sympy_benchmarks`` are stored in the same folder then you should change the value of ``"repo"`` as   ::
+
+	"repo" : "../sympy/",
+
+You can also run benchmarks on your remote fork by using the remote fork's url address instead.
+
+Comparing benchmarks between two branches
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+You can also compare the benchmarks between two branches/commits. For that you need to create benchmarks for each one first. Do this for both,  ::
+
+  $ asv run -s 1 COMMIT
+
+Then you need to run ``asv compare`` on them.  ::
+
+  $ asv compare COMMIT1 COMMIT2
+
+here ``COMMIT`` can be replaced with branch names or commit hashes.
+
+If you are comparing the benchmarks of a branch against master, use the commit hash of the master that branch is based on. Otherwise, new unrelated commits in the master can affect the results. Alternately you can also merge master into the branch first to make sure it is up-to-date.
+
+Running benchmarks for a selection of commits
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Generally we're not interested in benchmarking every single commit to the sympy repo. For example, we might be interested in some tagged releases:
+
+   $ for release in 1.0 1.1 1.2 1.3 1.4; do asv run "sympy-$release^!"; done
+
+or all the merge commits to the master branch since some tag:
+
+   $ git rev-list --merges sympy-1.0..HEAD
+
 
 Running benchmarks for a selection of commits
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
