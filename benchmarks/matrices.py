@@ -1,4 +1,7 @@
 from sympy import MatrixSymbol, Add, MatAdd, Mul, MatMul, Symbol, Matrix
+from sympy import \
+    MutableDenseMatrix, ImmutableDenseMatrix, \
+    MutableSparseMatrix, ImmutableSparseMatrix
 
 n = Symbol('n')
 
@@ -44,3 +47,35 @@ class TimeDiagonalEigenvals:
 
     def time_eigenvals(self):
         self.M.eigenvals()
+
+
+class TimeMatrixGetItem:
+    def setup(self):
+        self.M1 = MutableDenseMatrix.zeros(5, 5)
+        self.M2 = ImmutableDenseMatrix.zeros(5, 5)
+        self.M3 = MutableSparseMatrix.zeros(5, 5)
+        self.M4 = ImmutableSparseMatrix.zeros(5, 5)
+
+    def time_MutableDenseMatrix_getitem(self):
+        m = self.M1
+        for i in range(m.rows):
+            for j in range(m.cols):
+                m[i, j]
+
+    def time_ImmutableDenseMatrix_getitem(self):
+        m = self.M2
+        for i in range(m.rows):
+            for j in range(m.cols):
+                m[i, j]
+
+    def time_MutableSparseMatrix_getitem(self):
+        m = self.M3
+        for i in range(m.rows):
+            for j in range(m.cols):
+                m[i, j]
+
+    def time_ImmutableSparseMatrix_getitem(self):
+        m = self.M4
+        for i in range(m.rows):
+            for j in range(m.cols):
+                m[i, j]
