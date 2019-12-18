@@ -23,7 +23,7 @@ class TimeBasicGCD:
     # Testing a basic pure Python function that does not use SymPy.
     def setup(self):
         self.a = 2**20*3**30
-        self.b = 2**30*2**20
+        self.b = 2**30*3**20
         self.result = 2**20*3**20
 
     def time_gcd(self):
