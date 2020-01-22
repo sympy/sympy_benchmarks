@@ -1,6 +1,5 @@
 import os
 
-from sympy.core.compatibility import range
 from sympy.logic.utilities import load_file
 from sympy.logic import satisfiable
 

@@ -1,4 +1,3 @@
-from time import clock
 import sympy as sp
 
 def _get_args_exprs():
