@@ -56,6 +56,116 @@ class TimeSolve01:
         sympy.solve(self.eqs, *self.p.c, check=False)
 
 
+class TimeRationalSystem:
+    """Solve a dense system of linear equations with rational coefficients"""
+
+    M = sympy.Matrix([
+        [43,  5, 36,  0, 92, 47, 98, 62, 30, 12, 14, 91, 64, 71, 39, 95,  7,  8, 11,  0, 74],
+        [ 4, 94, 75, 67, 46, 28, 49, 54, 28, 15, 61, 23, 45, 24, 63, 50, 12, 59,  9, 25,  6],
+        [52, 70, 97, 65,  8, 38, 20, 36, 57, 48, 47, 79,  3, 94, 90, 60, 74, 53, 60, 84, 79],
+        [ 0, 82, 61, 63, 89, 44, 78, 90,  9, 38, 41, 72, 75, 57,  9, 83, 53, 93, 54, 31, 12],
+        [90, 14, 68,  9, 16, 50, 67, 40, 18, 83, 80, 28, 30, 72, 96, 61, 54,  6, 40,  3, 83],
+        [55, 81, 98, 26,  0, 36, 92, 79, 55, 25, 68, 68, 31, 73, 28, 77, 14, 86, 93, 29, 59],
+        [72, 39, 18, 62, 77, 93, 66, 49, 76, 70, 63, 86, 20, 41, 81, 74, 39, 65, 53, 92, 79],
+        [ 6, 34, 81, 27, 99, 55, 99, 78, 56, 56, 52, 67, 29, 26, 83, 78, 58, 83, 41,  2, 17],
+        [10, 24, 88, 59,  5, 44, 89, 34, 96, 53, 92, 73, 19, 76, 51, 23, 62, 64, 40, 63, 67],
+        [21, 98, 12, 30, 97, 59, 79, 16, 18, 81, 76, 74, 14, 86, 61, 61, 27, 63, 20, 78, 80],
+        [74, 20, 46, 99,  1, 19,  0, 18, 69, 45, 18, 69, 86, 89, 92, 39, 47, 77, 96, 25, 62],
+        [60, 43, 44, 97, 74, 89, 65, 50, 38, 95, 73, 37, 57, 24, 81, 51, 74, 74, 75, 53, 32],
+        [15, 43, 13, 24, 22, 66, 30,  5, 71, 52, 10, 98, 62, 76, 78, 49, 48, 58,  5, 83,  4],
+        [89, 30, 37, 47, 90, 21, 13,  1, 38, 56, 32, 16, 79, 47, 36, 45, 97, 80, 21, 86, 76],
+        [28, 45, 95, 46,  5, 31, 32, 35, 60, 18,  6, 74, 97, 42, 42, 92, 83, 52, 37,  5, 35],
+        [45,  3, 17, 66, 91, 75,  3, 25, 48, 95, 41,  8, 15, 65, 70, 64, 64, 96, 91, 73, 47],
+        [85, 36, 30, 25, 32, 79, 70, 36, 69, 57, 23, 38, 10,  3, 25, 18, 78, 83, 94, 39, 39],
+        [ 2, 61, 50,  4,  4, 86, 70,  5, 64, 90, 75,  4, 53, 38, 22, 17, 27, 32, 58, 37, 26],
+        [97, 64,  2,  6, 59, 37, 98,  4, 97,  7, 21, 49, 98, 47, 77, 85,  2, 53, 26, 10, 55],
+        [59, 93, 94, 42, 25, 42, 26, 73, 73, 61, 43,  5, 99, 62, 48, 75, 43, 96, 12, 91, 46]
+    ])
+
+    syms = sympy.symbols('x:20')
+
+    params = [1, 3, 5, 10]
+
+    def setup(self, n):
+        Mn = self.M[:n, :n+1]
+        self.symsn = self.syms[:n]
+        self.eqsn = list(Mn * sympy.Matrix(self.symsn + (1,)))
+
+    def time_solve(self, n):
+        sympy.solve(self.eqsn, self.symsn)
+
+    def time_linsolve(self, n):
+        sympy.linsolve(self.eqsn, self.symsn)
+
+
+class TimeRationalSystemSymbol(TimeRationalSystem):
+    """Solve a dense system of linear equations with a symbol in coefficients"""
+
+    params = [1, 3, 5]
+
+    def setup(self, n):
+        super().setup(n)
+        y = sympy.Symbol('y')
+        self.eqsn = [y*eq for eq in self.eqsn]
+
+
+class TimeSparseSystem:
+    """Solve a large, sparse system of linear equations"""
+
+    def mk_eqs(self, n):
+        xs = sympy.symbols('x:{}'.format(n))
+        ys = sympy.symbols('y:{}'.format(n))
+        syms = xs + ys
+        eqs = []
+        for xi, yi in zip(xs, ys):
+            eqs.extend([xi + yi, xi - yi + 1])
+        return eqs, syms
+
+    params = [10, 20, 30]
+
+    def setup(self, n):
+        self.eqs, self.syms = self.mk_eqs(n)
+        self.Ab = sympy.linear_eq_to_matrix(self.eqs, self.syms)
+        self.Aaug = sympy.Matrix.hstack(*self.Ab)
+
+    def time_solve(self, n):
+        sympy.solve(self.eqs, self.syms)
+
+    def time_linsolve_eqs(self, n):
+        sympy.linsolve(self.eqs, self.syms)
+
+    def time_linsolve_Ab(self, n):
+        sympy.linsolve(self.Ab)
+
+    def time_linsolve_Aaug(self, n):
+        sympy.linsolve(self.Aaug)
+
+    def time_linear_eq_to_matrix(self, n):
+        sympy.linear_eq_to_matrix(self.eqs, self.syms)
+
+
+class TimeSolveSparsePolySystem:
+    """Solve a sparse, separable polynomial system"""
+
+    def make_polysys(self, n):
+        xs = sympy.symbols('x:%d' % n)
+        ys = sympy.symbols('y:%d' % n)
+        eqs = []
+        for xi, yi in zip(xs, ys):
+            eqs.append(xi**2 + yi**2-1)
+            eqs.append(xi + yi - 2)
+        syms = xs + ys
+        return eqs, syms
+
+    params = [1, 2, 3]
+
+    def setup(self, n):
+        self.eqs, self.syms = self.make_polysys(n)
+
+    def time_solve(self, n):
+        sympy.solve(self.eqs, self.syms)
+
+
 def _matrix_solve_setup():
 
         n = 3
