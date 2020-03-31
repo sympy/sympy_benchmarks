@@ -1,5 +1,5 @@
 from __future__ import print_function, division
-from distutils.version import LooseVersion, StrictVersion
+from distutils.version import LooseVersion
 from sympy import Rational
 import sympy
 from sympy.geometry import (Line, Point,
@@ -55,7 +55,7 @@ class PolygonDistance:
 
 class PolygonSecondMoment:
     def setup(self):
-        if StrictVersion(sympy.__version__) < StrictVersion("1.3.0"):
+        if LooseVersion(sympy.__version__) < LooseVersion("1.3.0"):
             raise NotImplementedError
     def time_bench01(self):
         "Polygon.second_moment_of_area() for w in range(10)"
@@ -63,7 +63,7 @@ class PolygonSecondMoment:
 
 class PolygonFirstMoment:
     def setup(self):
-        if StrictVersion(sympy.__version__) < StrictVersion("1.5.0"):
+        if LooseVersion(sympy.__version__) < LooseVersion("1.5.0"):
             raise NotImplementedError
     def time_bench01(self):
         "Polygon.first_moment_of_area for w in range(10)"
@@ -71,7 +71,7 @@ class PolygonFirstMoment:
 
 class PolygonPolarSecondMoment:
     def setup(self):
-        if StrictVersion(sympy.__version__) < StrictVersion("1.5.0"):
+        if LooseVersion(sympy.__version__) < LooseVersion("1.5.0"):
             raise NotImplementedError
     def time_bench01(self):
         "Polygon.polar_second_moment_of_area for w in range(10)"
@@ -79,7 +79,7 @@ class PolygonPolarSecondMoment:
 
 class PolygonSectionModulus:
     def setup(self):
-        if StrictVersion(sympy.__version__) < StrictVersion("1.5.0"):
+        if LooseVersion(sympy.__version__) < LooseVersion("1.5.0"):
             raise NotImplementedError
     def time_bench01(self):
         "Polygon.section_modulus for w in range(10)"
@@ -87,7 +87,7 @@ class PolygonSectionModulus:
 
 class PolygonCutSection:
     def setup(self):
-        if StrictVersion(sympy.__version__) < StrictVersion("1.5.0"):
+        if LooseVersion(sympy.__version__) < LooseVersion("1.5.0"):
             raise NotImplementedError
     def time_bench01(self):
         "Polygon.cut_section for w in range(10)"
