@@ -101,6 +101,8 @@ class TimeRationalSystem:
 class TimeRationalSystemSymbol(TimeRationalSystem):
     """Solve a dense system of linear equations with a symbol in coefficients"""
 
+    params = [1, 3, 5]
+
     def setup(self, n):
         super().setup(n)
         y = sympy.Symbol('y')
@@ -119,7 +121,7 @@ class TimeSparseSystem:
             eqs.extend([xi + yi, xi - yi + 1])
         return eqs, syms
 
-    params = [10, 20, 50, 100]
+    params = [10, 20, 30]
 
     def setup(self, n):
         self.eqs, self.syms = self.mk_eqs(n)
@@ -155,7 +157,7 @@ class TimeSolveSparsePolySystem:
         syms = xs + ys
         return eqs, syms
 
-    params = [1, 2, 3, 4, 5]
+    params = [1, 2, 3]
 
     def setup(self, n):
         self.eqs, self.syms = self.make_polysys(n)
