@@ -84,7 +84,7 @@ class TimeRationalSystem:
 
     syms = sympy.symbols('x:20')
 
-    params = [1, 3, 5, 10, 20]
+    params = [1, 3, 5, 10]
 
     def setup(self, n):
         Mn = self.M[:n, :n+1]
@@ -100,7 +100,6 @@ class TimeRationalSystem:
 
 class TimeRationalSystemSymbol(TimeRationalSystem):
     """Solve a dense system of linear equations with a symbol in coefficients"""
-
 
     def setup(self, n):
         super().setup(n)

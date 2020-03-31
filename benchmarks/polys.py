@@ -3,7 +3,7 @@ import sympy
 class TimePolyManyGens:
     """Time using a Poly with many generators"""
 
-    params = [1, 10, 100, 500, 1000]
+    params = [1, 10, 100, 500]
 
     def setup(self, n):
         self.xs = sympy.symbols('x:{}'.format(n))
