@@ -166,6 +166,68 @@ class TimeSolveSparsePolySystem:
         sympy.solve(self.eqs, self.syms)
 
 
+class TimeSolveLinSys:
+    """Time the solve_lin_sys function"""
+
+    def setup(self):
+        raise NotImplementedError
+
+    def time_solve_lin_sys(self):
+        sol = self.solve_lin_sys(self.eqs, self.ring)
+        if sol != self.sol:
+            raise ValueError("Wrong solution")
+
+    def time_verify_sol(self):
+        zeros = [eq.compose(self.sol) for eq in self.eqs]
+        if not all([zero == 0 for zero in zeros]):
+            raise ValueError("All values in zero should be 0")
+
+    def time_to_expr_eqs(self):
+        assert [self.ring.from_expr(eq.as_expr()) for eq in self.eqs] == self.eqs
+
+
+class TimeSolveLinSys189x49(TimeSolveLinSys):
+    """Time the solve_lin_sys function"""
+
+    def setup(self):
+        from sympy.polys.solvers import solve_lin_sys
+        self.solve_lin_sys = solve_lin_sys
+        from benchmarks.solve_large_poly import eqs_189x49, sol_189x49, R_49
+        self.eqs = eqs_189x49()
+        self.sol = sol_189x49()
+        self.ring = R_49
+
+
+class TimeSolveLinSys165x165(TimeSolveLinSys):
+    """Time the solve_lin_sys function"""
+
+    def setup(self):
+        from sympy.polys.solvers import solve_lin_sys
+        self.solve_lin_sys = solve_lin_sys
+        from benchmarks.solve_large_poly import eqs_165x165, sol_165x165, R_165
+        self.eqs = eqs_165x165()
+        self.sol = sol_165x165()
+        self.ring = R_165
+        # sympy master as too slow to run this benchmark at the time it was
+        # added.
+        raise NotImplementedError
+
+
+class TimeSolveLinSys10x8(TimeSolveLinSys):
+    """Time the solve_lin_sys function"""
+
+    def setup(self):
+        from sympy.polys.solvers import solve_lin_sys
+        self.solve_lin_sys = solve_lin_sys
+        from benchmarks.solve_large_poly import eqs_10x8, sol_10x8, R_8
+        self.eqs = eqs_10x8()
+        self.sol = sol_10x8()
+        self.ring = R_8
+        # sympy master as too slow to run this benchmark at the time it was
+        # added.
+        raise NotImplementedError
+
+
 def _matrix_solve_setup():
 
         n = 3
