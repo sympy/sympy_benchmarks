@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from sympy.core import Add, Mul, symbols, I
+from sympy.core import Add, Mul, symbols, I, Pow, S
 
 x, y, z = symbols('x,y,z')
 
@@ -47,19 +47,18 @@ class TimeCoreArit:
     def time_Div_2y(self):
         2/y
 
-class TimeCoreExpand:
-    def time_expand_nothing_todo(self):
-        p.expand(self)
+    def time_pow2(self):
+        Pow(x, 2)
 
+    def time_pow100(self):
+        Pow(x, 100)
 
-    def bench_expand_32(self):
-        """(x+y+z+1)**32  -> expand"""
-        e.expand(self)
+    def time_mod_pow(self):
+        for x, y, z in [(4, 13, 497), (4, -3, 497), (3.2, 2.1, 1.9)]:
+            pow(S(x), y, z)
+            pow(S(x), S(y), z)
+            pow(S(x), y, S(z))
+            pow(S(x), S(y), S(z))
 
-
-    def time_expand_complex_number_1(self):
-        ((2 + 3*I)**1000).expand(complex=True)
-
-
-    def time_expand_complex_number_2(self):
-        ((2 + 3*I/4)**1000).expand(complex=True)
+    def time_pow_im(self):
+        (2*x*I)**(7/3)
