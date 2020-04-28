@@ -183,27 +183,41 @@ class TimeMatrixSolve:
     params = ['GE', 'LU', 'ADJ']
 
     def setup(self, name):
-
-        self.A, self.b, _ = _matrix_solve_setup()
+        self.A, self.b, self.A_sym = _matrix_solve_setup()
 
     def time_solve(self, name):
-
         self.A.solve(self.b, method=name)
+
+    def time_solve_sym(self, name):
+        self.A_sym.solve(self.b, method=name)
 
 
 class TimeMatrixSolve2:
 
     def setup(self):
-
         self.A, self.b, self.A_sym = _matrix_solve_setup()
 
     def time_lusolve(self):
-
         self.A.LUsolve(self.b)
 
     def time_cholesky_solve(self):
-
         self.A_sym.cholesky_solve(self.b)
+
+    def time_LDLsolve(self):
+        self.A_sym.LDLsolve(self.b)
+
+
+class TimeMatrixPositiveDefinite:
+
+    def setup(self):
+        self.A, self.b, self.A_sym = _matrix_solve_setup()
+
+    def time_A_is_positive_definite(self):
+        self.A.is_positive_definite
+
+    def time_A_sym_is_positive_definite(self):
+        self.A_sym.is_positive_definite
+
 
 class TimeMatrixOperations:
     # first param is the size of the matrix, second is the number of symbols in it
@@ -324,3 +338,48 @@ class TimeMatrixArithmetic:
 
     def time_dense_add(self, n, num_symbols):
         self.A + self.A
+
+
+class TimeMatrixSolvePyDy:
+
+    def setup(self):
+        # from pydy.models import n_link_pendulum_on_cart
+        # sys = n_link_pendulum_on_cart(n=1)
+        # M = sys.eom_method.mass_matrix
+        # F = sys.eom_method.forcing
+        #
+        # Bigger examples can be made by increasing n but at the time of
+        # writing this is already slow for Cholesky/LDL
+
+        g, t, m0, m1, l0 = sympy.symbols('g, t, m0, m1, l0')
+        q1, u1, F = sympy.symbols('q1, u1, F', cls=sympy.Function)
+        cos = sympy.cos
+        sin = sympy.sin
+
+        self.M = sympy.Matrix([
+            [          m0 + m1, -l0*m1*sin(q1(t))],
+            [-l0*m1*sin(q1(t)),          l0**2*m1]
+        ])
+
+        self.F = sympy.Matrix([
+            [l0*m1*u1(t)**2*cos(q1(t)) + F(t)],
+            [             -g*l0*m1*cos(q1(t))]
+        ])
+
+        self.syms = sympy.symbols('x:2')
+        self.eqs = self.M * sympy.Matrix(self.syms) - self.F
+
+    def time_LUsolve(self):
+        self.M.LUsolve(self.F)
+
+    def time_cholesky_solve(self):
+        self.M.cholesky_solve(self.F)
+
+    def time_LDLsolve(self):
+        self.M.LDLsolve(self.F)
+
+    def time_linsolve(self):
+        sympy.linsolve((self.M, self.F))
+
+    def time_solve(self):
+        sympy.solve(self.eqs, self.syms)
