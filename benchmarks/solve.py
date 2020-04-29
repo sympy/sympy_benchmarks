@@ -340,9 +340,9 @@ class TimeMatrixArithmetic:
         self.A + self.A
 
 
-class TimeMatrixSolvePyDy:
+class PyDyExample:
 
-    def setup(self):
+    def setup(self, n):
         # from pydy.models import n_link_pendulum_on_cart
         # sys = n_link_pendulum_on_cart(n=1)
         # M = sys.eom_method.mass_matrix
@@ -351,35 +351,115 @@ class TimeMatrixSolvePyDy:
         # Bigger examples can be made by increasing n but at the time of
         # writing this is already slow for Cholesky/LDL
 
-        g, t, m0, m1, l0 = sympy.symbols('g, t, m0, m1, l0')
-        q1, u1, F = sympy.symbols('q1, u1, F', cls=sympy.Function)
+        g, t = sympy.symbols('g, t')
+        m0, m1, m2, m3 = sympy.symbols('m:4')
+        l0, l1, l2 = sympy.symbols('l:3')
+        F, q1, q2, q3, u1, u2, u3 = sympy.symbols('F, q1:4, u1:4', cls=sympy.Function)
         cos = sympy.cos
         sin = sympy.sin
 
-        self.M = sympy.Matrix([
-            [          m0 + m1, -l0*m1*sin(q1(t))],
-            [-l0*m1*sin(q1(t)),          l0**2*m1]
-        ])
+        if n == 1:
+            self.M = sympy.Matrix([
+                [          m0 + m1, -l0*m1*sin(q1(t))],
+                [-l0*m1*sin(q1(t)),          l0**2*m1]
+            ])
+            self.F = sympy.Matrix([
+                [l0*m1*u1(t)**2*cos(q1(t)) + F(t)],
+                [             -g*l0*m1*cos(q1(t))]
+            ])
+        elif n == 2:
+            self.M = sympy.Matrix([
+                [m0 + m1 + m2, -l0*m1*sin(q1(t)) - l0*m2*sin(q1(t)),
+                    -l1*m2*sin(q2(t))],
+                [-l0*m1*sin(q1(t)) - l0*m2*sin(q1(t)), l0**2*m1 + l0**2*m2,
+                    l0*l1*m2*(sin(q1(t))*sin(q2(t)) + cos(q1(t))*cos(q2(t)))],
+                [-l1*m2*sin(q2(t)), l0*l1*m2*(sin(q1(t))*sin(q2(t))
+                    + cos(q1(t))*cos(q2(t))), l1**2*m2]
+            ])
+            self.F = sympy.Matrix([
+                [l0*m1*u1(t)**2*cos(q1(t)) + l0*m2*u1(t)**2*cos(q1(t))
+                    + l1*m2*u2(t)**2*cos(q2(t)) + F(t)],
+                [-g*l0*m1*cos(q1(t)) - g*l0*m2*cos(q1(t))
+                    + l0*l1*m2*(-sin(q1(t))*cos(q2(t))
+                    + sin(q2(t))*cos(q1(t)))*u2(t)**2],
+                [-g*l1*m2*cos(q2(t)) + l0*l1*m2*(sin(q1(t))*cos(q2(t))
+                    - sin(q2(t))*cos(q1(t)))*u1(t)**2]
+            ])
+        elif n == 3:
+            self.M = sympy.Matrix([
+                [m0 + m1 + m2 + m3, -l0*m1*sin(q1(t)) - l0*m2*sin(q1(t)) -
+                    l0*m3*sin(q1(t)), -l1*m2*sin(q2(t)) - l1*m3*sin(q2(t)),
+                    -l2*m3*sin(q3(t))],
+                [-l0*m1*sin(q1(t)) - l0*m2*sin(q1(t)) - l0*m3*sin(q1(t)),
+                    l0**2*m1 + l0**2*m2 + l0**2*m3,
+                    l0*l1*m2*(sin(q1(t))*sin(q2(t)) + cos(q1(t))*cos(q2(t))) +
+                    l0*l1*m3*(sin(q1(t))*sin(q2(t)) + cos(q1(t))*cos(q2(t))),
+                    l0*l2*m3*(sin(q1(t))*sin(q3(t)) + cos(q1(t))*cos(q3(t)))],
+                [-l1*m2*sin(q2(t)) - l1*m3*sin(q2(t)),
+                    l0*l1*m2*(sin(q1(t))*sin(q2(t)) + cos(q1(t))*cos(q2(t))) +
+                    l0*l1*m3*(sin(q1(t))*sin(q2(t)) + cos(q1(t))*cos(q2(t))),
+                    l1**2*m2 + l1**2*m3, l1*l2*m3*(sin(q2(t))*sin(q3(t)) +
+                        cos(q2(t))*cos(q3(t)))],
+                [-l2*m3*sin(q3(t)), l0*l2*m3*(sin(q1(t))*sin(q3(t)) +
+                    cos(q1(t))*cos(q3(t))), l1*l2*m3*(sin(q2(t))*sin(q3(t)) +
+                        cos(q2(t))*cos(q3(t))), l2**2*m3]
+            ])
+            self.F = sympy.Matrix([
+                [l0*m1*u1(t)**2*cos(q1(t)) + l0*m2*u1(t)**2*cos(q1(t)) +
+                    l0*m3*u1(t)**2*cos(q1(t)) + l1*m2*u2(t)**2*cos(q2(t)) +
+                    l1*m3*u2(t)**2*cos(q2(t)) + l2*m3*u3(t)**2*cos(q3(t)) +
+                    F(t)],
+                [-g*l0*m1*cos(q1(t)) - g*l0*m2*cos(q1(t)) - g*l0*m3*cos(q1(t))
+                    + l0*l1*m2*(-sin(q1(t))*cos(q2(t)) +
+                        sin(q2(t))*cos(q1(t)))*u2(t)**2 +
+                    l0*l1*m3*(-sin(q1(t))*cos(q2(t)) +
+                        sin(q2(t))*cos(q1(t)))*u2(t)**2 +
+                    l0*l2*m3*(-sin(q1(t))*cos(q3(t)) +
+                        sin(q3(t))*cos(q1(t)))*u3(t)**2],
+                [-g*l1*m2*cos(q2(t)) - g*l1*m3*cos(q2(t)) +
+                    l0*l1*m2*(sin(q1(t))*cos(q2(t)) -
+                        sin(q2(t))*cos(q1(t)))*u1(t)**2 +
+                    l0*l1*m3*(sin(q1(t))*cos(q2(t)) -
+                        sin(q2(t))*cos(q1(t)))*u1(t)**2 +
+                    l1*l2*m3*(-sin(q2(t))*cos(q3(t)) +
+                        sin(q3(t))*cos(q2(t)))*u3(t)**2],
+                [-g*l2*m3*cos(q3(t)) + l0*l2*m3*(sin(q1(t))*cos(q3(t)) -
+                    sin(q3(t))*cos(q1(t)))*u1(t)**2 +
+                    l1*l2*m3*(sin(q2(t))*cos(q3(t)) -
+                        sin(q3(t))*cos(q2(t)))*u2(t)**2]
+            ])
 
-        self.F = sympy.Matrix([
-            [l0*m1*u1(t)**2*cos(q1(t)) + F(t)],
-            [             -g*l0*m1*cos(q1(t))]
-        ])
-
-        self.syms = sympy.symbols('x:2')
+        self.syms = sympy.symbols('x:%d' % self.M.shape[1])
         self.eqs = self.M * sympy.Matrix(self.syms) - self.F
 
-    def time_LUsolve(self):
+
+class TimeMatrixSolvePyDyFast(PyDyExample):
+
+    # Test for n=1,2 with the fast solvera
+    params = [1, 2, 3]
+
+    def time_LUsolve(self, n):
         self.M.LUsolve(self.F)
 
-    def time_cholesky_solve(self):
+
+class TimeMatrixSolvePyDySlow(PyDyExample):
+
+    # These functions are too slow with n=2
+    params = [1]
+
+    # cholesky_solve and LDLsolve used to be much faster and would have been
+    # testable with much bigger n. Once the regressions introduced between 1.5
+    # and 1.6 are fixed these could be moved to a separate class that has
+    # bigger n conditional on sympy >= 1.6
+
+    def time_cholesky_solve(self, n):
         self.M.cholesky_solve(self.F)
 
-    def time_LDLsolve(self):
+    def time_LDLsolve(self, n):
         self.M.LDLsolve(self.F)
 
-    def time_linsolve(self):
+    def time_linsolve(self, n):
         sympy.linsolve((self.M, self.F))
 
-    def time_solve(self):
+    def time_solve(self, n):
         sympy.solve(self.eqs, self.syms)
