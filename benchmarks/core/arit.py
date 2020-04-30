@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from sympy.core import Add, Mul, symbols, I, Pow, S
+from sympy import sin
+from sympy.core import Add, Mul, symbols, I, Pow, S, Symbol
 
 x, y, z = symbols('x,y,z')
 
 p = 3*x**2*y*z**7 + 7*x*y*z**2 + 4*x + x*y**4
 e = (x + y + z + 1)**32
 
-class TimeCoreArit:
+class Time_Arit:
     def time_neg(self):
         -x
 
@@ -62,3 +63,29 @@ class TimeCoreArit:
 
     def time_pow_im(self):
         (2*x*I)**(7/3)
+
+class Time_assumption:
+
+    def setup(self):
+        self.ncx = Symbol("x", commutative=False)
+        self.ncy = Symbol("y", commutative=False)
+        self.k_i = Symbol('k', integer=True)
+        self.x_f = Symbol('x', extended_real=True, finite=False)
+
+    def time_ncmul(self):
+        self.ncx*self.ncy != self.ncy*self.ncx
+        self.ncx*self.ncy*3 == 3*self.ncx*self.ncy
+
+    def time_ncpow(self):
+        (x**2)*(y**2) != (y**2)*(x**2)
+        2**x*2**(2*x) == 2**(3*x)
+
+    def time_Add_Mul_is_integer(self):
+        (self.k_i + 1).is_integer
+        (2*self.k_i).is_integer
+        (self.k_i/3).is_integer
+
+    def time_Add_Mul_is_finite(self):
+        sin(self.x_f).is_finite
+        (self.x_f*sin(self.x_f)).is_finite
+        (sin(self.x_f) - 67).is_finite
