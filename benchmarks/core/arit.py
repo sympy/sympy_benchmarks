@@ -12,38 +12,29 @@ class Time_Arit:
     def time_neg(self):
         -x
 
-
     def time_Add_x1(self):
         x + 1
-
 
     def time_Add_1x(self):
         1 + x
 
-
     def time_Add_x05(self):
         x + 0.5
-
 
     def time_Add_xy(self):
         x + y
 
-
     def time_Add_xyz(self):
         Add(*[x, y, z])
-
 
     def time_Mul_xy(self):
         x*y
 
-
     def time_Mul_xyz(self):
         Mul(*[x, y, z])
 
-
     def time_Div_xy(self):
         x/y
-
 
     def time_Div_2y(self):
         2/y
