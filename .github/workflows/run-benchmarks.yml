@@ -37,4 +37,4 @@ jobs:
         run: asv machine --yes --config asv.conf.actions.json
 
       - name: Run benchmarks
-        run: asv run --config asv.conf.actions.json --quick
+        run: asv run --config asv.conf.actions.json
