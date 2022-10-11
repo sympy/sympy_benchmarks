@@ -138,3 +138,94 @@ class GriewankBabyExampleCSE:
     def time_combined_cse(self):
         """Time simultaneous CSE on the baby example and its Jacobian."""
         cse([self.y, self.G])
+
+
+class GriewankLighthouseExampleCSE:
+    """Simple matrix test function with multiple repeated subexpressions.
+
+    Function is the "lighthouse example" taken from Griewank, A., & Walther, A.
+    (2008). Evaluating derivatives: principles and techniques of algorithmic
+    differentiation. SIAM.
+
+    The lighthouse example function expressed as a tree structure is as follows:
+    
+
+
+
+            (TAN)
+              |
+              |
+            (MUL)
+             _|_
+            /    \
+        (omega) (t)
+
+    It involves 2 DIV, 7 MUL, 2 SUB, and 4 TAN operations. Additionally, one
+    matrix population is required.
+
+    When CSE is conducted on the expression, the following intermediate terms
+    are introduced:
+
+    @0: MUL[omega, t]
+    @1: TAN[@0]
+    @2: SUB[gamma, @1]
+    @3: DIV[@1, @2]
+    @4: MUL[nu, @3]
+    @5: MUL[gamma, @4]
+
+    @0, @2, and @3 are operands in only one operation each so can be collapsed.
+    @1 is an operand in four operations and @4 is both a required expression and
+    an operand in an expression so both are required common subexpressions. @1
+    will become the first common subexpression (x0, tan(omega * t)) and @4 will
+    become the second common subexpression (x1, nu * x0 / (gamma - x0)). @5 is
+    one of the required expressions in the matrix so can used directly there
+    resulting in the substituted matrix expression Matrix([x1, gamma * x1]).
+
+    """
+
+    def setup(self):
+        """Create the required symbols (nu, gamma, omega, t), the matrix of
+        expressions (y), and its Jacobian (G).
+
+        G is the 2x4 matrix that contains the derivatives of y with respect to
+        nu, gamma, omega, and t as the four columns respectively.
+        
+        """
+        nu, gamma, omega, t = symbols("nu, gamma, omega, t")
+        x = Matrix([nu, gamma, omega, t])
+        self.y = Matrix([
+            nu * tan(omega * t) / (gamma - tan(omega * t)),
+            nu * gamma * tan(omega * t) / (gamma - tan(omega * t)),
+        ])
+        self.G = self.y.diff(x)
+
+    def test_function_cse(self):
+        """Expected result from SymPy's CSE on the lighthouse example."""
+        nu = sym.Symbol("nu")
+        gamma = sym.Symbol("gamma")
+        omega = sym.Symbol("omega")
+        t = sym.Symbol("t")
+        x0 = sym.Symbol("x0")
+        x1 = sym.Symbol("x1")
+
+        cse = [
+            (x0, tan(omega * t)),
+            (x1, nu * x0 / (gamma - x0)),
+        ]
+        expr = [
+            Matrix([x1, gamma * x1]),
+        ]
+
+        assert cse(self.y) == (cse, expr)
+
+    def time_function_cse(self):
+        """Time CSE on the lighthouse example."""
+        cse(self.y)
+
+    def time_jacobian_cse(self):
+        """Time CSE on the lighthouse example's Jacobian."""
+        cse(self.G)
+
+    def time_combined_cse(self):
+        """Time simultaneous CSE on the lighthouse example and its Jacobian."""
+        cse([self.y, self.G])
