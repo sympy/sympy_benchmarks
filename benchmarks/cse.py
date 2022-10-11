@@ -148,17 +148,29 @@ class GriewankLighthouseExampleCSE:
     differentiation. SIAM.
 
     The lighthouse example function expressed as a tree structure is as follows:
-    
 
-
-
-            (TAN)
-              |
-              |
-            (MUL)
-             _|_
-            /    \
-        (omega) (t)
+                               (MATRIX)
+                        __________|___________
+                       /                      \    
+                     (MUL)                  (MUL)
+                     __|__                   _|_              
+                    /     \                 /   \              
+                  (MUL) (gamma)          (DIV) (nu)      
+                   _|_               ______|_____          
+                  /   \             /            \             
+               (DIV) (nu)         (TAN)        (SUB)             
+           ______|_____             |          __|__              
+          /            \            |         /     \               
+        (TAN)        (SUB)        (MUL)   (gamma) (TAN)                
+          |          __|__         _|_              |                
+          |         /     \       /   \             |                 
+        (MUL)   (gamma) (TAN) (omega) (t)         (MUL)                
+         _|_              |                        _|_                
+        /   \             |                       /   \            
+    (omega) (t)         (MUL)                 (omega) (t)            
+                         _|_             
+                        /   \             
+                    (omega) (t)          
 
     It involves 2 DIV, 7 MUL, 2 SUB, and 4 TAN operations. Additionally, one
     matrix population is required.
