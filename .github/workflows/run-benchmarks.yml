@@ -10,8 +10,11 @@ jobs:
 
     steps:
 
-      - name: Checkout SymPy benchmarks
-        uses: actions/checkout@v2
+      - name: Checkout SymPy
+        uses: actions/checkout@v3
+        with:
+          repository: sympy/sympy
+          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v3
@@ -21,12 +24,17 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install virtualenv asv
-          cp .ci/.asv-machine.json ~
-          git clone --bare git://github.com/sympy/sympy sympy
+          pip install virtualenv asv pytest
 
-      - name: Run against master
-        run: .ci/run_ci.sh master
+      - name: Setup access to branches
+        run: |
+          git submodule add https://github.com/sympy/sympy_benchmarks.git
+          git remote add upstream https://github.com/sympy/sympy.git
+          git fetch upstream master
+          git fetch upstream 1.11
 
-      - name: Run against SymPy 1.10.1
-        run: .ci/run_ci.sh sympy-1.10.1
+      - name: Configure benchmarks
+        run: asv machine --yes --config asv.conf.actions.json
+
+      - name: Run benchmarks
+        run: asv run --config asv.conf.actions.json --quick
