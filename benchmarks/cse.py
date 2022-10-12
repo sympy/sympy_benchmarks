@@ -1,4 +1,4 @@
-"""Benchmarks for SymPy's common subexpression elimination (CSE)."""
+"""Benchmarks for common subexpression elimination (CSE)."""
 
 from functools import reduce
 from operator import add
@@ -107,7 +107,7 @@ class GriewankBabyExampleCSE:
         self.G = self.y.diff(x)
 
     def test_function_cse(self):
-        """Expected result from SymPy's CSE on the baby example."""
+        """Expected result from CSE on the baby example."""
         x0 = sym.Symbol("x0")
         x1 = sym.Symbol("x1")
         x2 = sym.Symbol("x2")
@@ -124,7 +124,7 @@ class GriewankBabyExampleCSE:
         assert cse(self.y) == (cse, expr)
 
     def test_jacobian_cse(self):
-        """Expected result from SymPy's CSE on the baby example's Jacobian."""
+        """Expected result from CSE on the baby example's Jacobian."""
         pass
 
     def time_function_cse(self):
@@ -212,7 +212,7 @@ class GriewankLighthouseExampleCSE:
         self.G = self.y.diff(x)
 
     def test_function_cse(self):
-        """Expected result from SymPy's CSE on the lighthouse example."""
+        """Expected result from CSE on the lighthouse example."""
         nu = sym.Symbol("nu")
         gamma = sym.Symbol("gamma")
         omega = sym.Symbol("omega")
