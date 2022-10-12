@@ -123,10 +123,6 @@ class GriewankBabyExampleCSE:
 
         assert cse(self.y) == (cse, expr)
 
-    def test_jacobian_cse(self):
-        """Expected result from CSE on the baby example's Jacobian."""
-        pass
-
     def time_function_cse(self):
         """Time CSE on the baby example."""
         cse(self.y)
