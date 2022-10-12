@@ -23,3 +23,29 @@ class GriewankBabyExampleDerivatives:
     def time_jacobian(self):
         """Time differentiation of the baby example."""
         self.G = self.y.diff(self.x)
+
+
+class GriewankLighthouseExampleDerivatives:
+    """Simple matrix test function in four variables.
+
+    Function is the "lighthouse example" taken from Griewank, A., & Walther, A.
+    (2008). Evaluating derivatives: principles and techniques of algorithmic
+    differentiation. SIAM.
+    
+    """
+
+    def setup(self):
+        """Create the required symbols (nu, gamma, omega, t) and the expression
+        (y).
+
+        """
+        nu, gamma, omega, t = symbols("nu, gamma, omega, t")
+        self.x = Matrix([nu, gamma, omega, t])
+        self.y = Matrix([
+            nu * tan(omega * t) / (gamma - tan(omega * t)),
+            nu * gamma * tan(omega * t) / (gamma - tan(omega * t)),
+        ])
+
+    def time_jacobian(self):
+        """Time differentation of the lighthouse example."""
+        self.G = self.y.jacobian(self.x)
