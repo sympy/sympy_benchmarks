@@ -205,7 +205,7 @@ class GriewankLighthouseExampleCSE:
             nu * tan(omega * t) / (gamma - tan(omega * t)),
             nu * gamma * tan(omega * t) / (gamma - tan(omega * t)),
         ])
-        self.G = self.y.diff(x)
+        self.G = self.y.jacobian(x)
 
     def test_function_cse(self):
         """Expected result from CSE on the lighthouse example."""
