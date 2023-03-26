@@ -83,7 +83,7 @@ class GriewankBabyExampleCSE:
     @1 and @2 are operands in two operations each so are required common
     subexpressions. @1 will become the first common subexpression (x0, x1 / x2)
     and @2 will become the second common subexpression (x3, x0 - exp(x2)). @6 is
-    the expression itself so can used directly there resulting in the
+    the expression itself, so it can be used directly there resulting in the
     substituted expression x3 * (x3 + sin(x0)).
 
     This example highlights an important optimisation around operation ordering
@@ -186,7 +186,7 @@ class GriewankLighthouseExampleCSE:
     an operand in an expression so both are required common subexpressions. @1
     will become the first common subexpression (x0, tan(omega * t)) and @4 will
     become the second common subexpression (x1, nu * x0 / (gamma - x0)). @5 is
-    one of the required expressions in the matrix so can used directly there
+    one of the required expressions in the matrix, so it can be used directly there
     resulting in the substituted matrix expression Matrix([x1, gamma * x1]).
 
     """

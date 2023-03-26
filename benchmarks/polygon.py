@@ -5,17 +5,17 @@ import sympy
 from sympy.geometry import (Line, Point,
                             Polygon)
 from random import randint
-listOfPolygons = [Polygon(Point(0+w,0+w),
-                          Point(3+w,0+w),
-                          Point(3+w,3+w),
-                          Point(0+w,3+w)) for w in range(10)]
+listOfPolygons = [Polygon(Point(0+w, 0+w),
+                          Point(3+w, 0+w),
+                          Point(3+w, 3+w),
+                          Point(0+w, 3+w)) for w in range(10)]
 cutListOfPolygons = [Polygon((-1, -1), (1, Rational(5, 2)), (2, 1), (3, Rational(5, 2)), (4, 2), (5, 3), (-1, 3)) for w in range(10)]
 cutLines = [Line((0, 0), (Rational(9, 2), 3)) for w in range(10)]
 
 class PolygonAttributes:
     def time_create(self):
         "Creating Polygon"
-        Polygon(Point(0, 0), Point(3, -1),Point(6, 0), Point(4, 5))
+        Polygon(Point(0, 0), Point(3, -1), Point(6, 0), Point(4, 5))
 
     def time_area(self):
         "Polygon.area for w in range(10)"

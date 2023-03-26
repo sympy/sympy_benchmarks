@@ -1,5 +1,5 @@
-from sympy import Symbol, Matrix, symbols, SparseMatrix, Abs
-from sympy import I, S, simplify
+from sympy import Matrix, symbols, SparseMatrix
+from sympy import S
 from sympy.simplify.simplify import simplify
 
 _TEST_SIMPLIFY = False # test simplify after operation?
@@ -7,7 +7,7 @@ _TEST_SIMPLIFY = False # test simplify after operation?
 x, y, z = symbols('x y z')
 
 A = Matrix(8, 8, ([1+x, 1-x]*4 + [1-x, 1+x]*4)*4)
-B = Matrix(8, 8, [x+i for i in range (64)])
+B = Matrix(8, 8, [x+i for i in range(64)])
 C = Matrix(S('''[
             [             -3/4,       45/32 - 37*I/16,         1/4 + I/2,      -129/64 - 9*I/64,      1/4 - 5*I/16,      65/128 + 87*I/64,         -9/32 - I/16,      183/256 - 97*I/128],
             [-149/64 + 49*I/32, -177/128 - 1369*I/128,  125/64 + 87*I/64, -2063/256 + 541*I/128,  85/256 - 33*I/16,  805/128 + 2415*I/512, -219/128 + 115*I/256, 6301/4096 - 6609*I/1024],

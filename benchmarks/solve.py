@@ -230,14 +230,14 @@ class TimeSolveLinSys10x8(TimeSolveLinSys):
 
 def _matrix_solve_setup():
 
-        n = 3
+    n = 3
 
-        A = sympy.Matrix(n, n, lambda i, j: sympy.Symbol('a{}{}'.format(i, j)))
-        b = sympy.Matrix(n, 1, lambda i, j: sympy.Symbol('b{}{}'.format(i, j)))
-        A_sym = sympy.Matrix(n, n, lambda i, j:
-                             sympy.Symbol('a{}{}'.format(*sorted((i, j)))))
+    A = sympy.Matrix(n, n, lambda i, j: sympy.Symbol('a{}{}'.format(i, j)))
+    b = sympy.Matrix(n, 1, lambda i, j: sympy.Symbol('b{}{}'.format(i, j)))
+    A_sym = sympy.Matrix(n, n, lambda i, j:
+                         sympy.Symbol('a{}{}'.format(*sorted((i, j)))))
 
-        return A, b, A_sym
+    return A, b, A_sym
 
 
 class TimeMatrixSolve:
@@ -283,7 +283,7 @@ class TimeMatrixPositiveDefinite:
 
 class TimeMatrixOperations:
     # first param is the size of the matrix, second is the number of symbols in it
-    params = ((3,4), (0, 2, 5))
+    params = ((3, 4), (0, 2, 5))
 
     def setup(self, n, num_symbols):
         from sympy import Matrix, Symbol

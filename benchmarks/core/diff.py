@@ -45,5 +45,5 @@ class GriewankLighthouseExampleDerivatives:
         ])
 
     def time_jacobian(self):
-        """Time differentation of the lighthouse example."""
+        """Time differentiation of the lighthouse example."""
         self.G = self.y.jacobian(self.x)
