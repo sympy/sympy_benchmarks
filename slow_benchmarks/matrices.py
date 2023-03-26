@@ -1,5 +1,5 @@
-from sympy import Symbol, Matrix, symbols, SparseMatrix, Abs
-from sympy import I, S, simplify
+from sympy import Matrix, symbols, SparseMatrix
+from sympy import S
 from sympy.simplify.simplify import simplify
 
 _TEST_SIMPLIFY = False # test simplify after operation?

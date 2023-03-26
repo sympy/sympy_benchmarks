@@ -3,7 +3,10 @@
 from functools import reduce
 from operator import add
 
-from sympy import cse, exp, sin, symbols, tan, Matrix
+import sympy as sym
+from sympy import cse, exp, sin, symbols, tan, Matrix, ImmutableDenseMatrix, MatAdd, MatMul, Transpose, Inverse, \
+    MatrixSymbol
+from sympy.core.singleton import SingletonRegistry
 
 
 def _get_args_exprs(nexprs, nterms):
@@ -237,6 +240,9 @@ class GriewankLighthouseExampleCSE:
     def time_combined_cse(self):
         """Time simultaneous CSE on the lighthouse example and its Jacobian."""
         cse([self.y, self.G])
+
+
+S = SingletonRegistry()
 
 
 class KalmanFilterMatrixEquationCSE:
