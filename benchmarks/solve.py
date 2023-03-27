@@ -179,7 +179,7 @@ class TimeSolveLinSys:
 
     def time_verify_sol(self):
         zeros = [eq.compose(self.sol) for eq in self.eqs]
-        if not all([zero == 0 for zero in zeros]):
+        if not all(zero == 0 for zero in zeros):
             raise ValueError("All values in zero should be 0")
 
     def time_to_expr_eqs(self):
