@@ -37,22 +37,8 @@ ignore = [
     "F841",  # Local variable `VARIABLE` is assigned to but never used
 ]
 
-# Exclude paths currently excluded in the flake8 configuration
-exclude = [
-    "sympy/assumptions/*generated.py",
-    "sympy/core/*_generated.py",
-    "sympy/parsing/latex/_antlr/*",
-    "sympy/parsing/autolev/_antlr/*",
-    "sympy/parsing/autolev/test-examples/*",
-    "sympy/integrals/rubi/*",
-]
-
 # Black default, although irrelevant with E501 ignored
 line-length = 88
 
 # Allow unused variables when underscore-prefixed.
 dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
-
-# Per-file ignores currently specified in the flake8 configuration
-[tool.ruff.per-file-ignores]
-"sympy/interactive/session.py" = ["F821"]
