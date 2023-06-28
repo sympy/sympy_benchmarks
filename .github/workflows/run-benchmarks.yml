@@ -31,7 +31,7 @@ jobs:
           git submodule add https://github.com/sympy/sympy_benchmarks.git
           git remote add upstream https://github.com/sympy/sympy.git
           git fetch upstream master
-          git fetch upstream 1.11
+          git fetch upstream 1.12
 
       - name: Configure benchmarks
         run: asv machine --yes --config asv.conf.actions.json
