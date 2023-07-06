@@ -22,7 +22,7 @@
 
     // This list needs to be updated after each release of sympy. The branch to
     // be checked should always be the previous release.
-    "branches": ["upstream/1.11", "upstream/master", "HEAD"], // for git
+    "branches": ["1.12", "master", "HEAD"], // for git
     // "branches": ["tip"],    // for mercurial
 
     // The DVCS being used.  If not set, it will be automatically
@@ -57,16 +57,15 @@
 
     // The directory (relative to the current directory) that benchmarks are
     // stored in.  If not provided, defaults to "benchmarks"
-    "benchmark_dir": "sympy_benchmarks/benchmarks",
+    // "benchmark_dir": "benchmarks",
 
     // The directory (relative to the current directory) to cache the Python
     // environments in.  If not provided, defaults to "env"
-    "env_dir": "sympy_benchmarks/env",
-
+    // "env_dir": "env",
 
     // The directory (relative to the current directory) that raw benchmark
     // results are stored in.  If not provided, defaults to "results".
-    "results_dir": "sympy_benchmarks/results"
+    // "results_dir": "results"
 
     // The directory (relative to the current directory) that the html tree
     // should be written to.  If not provided, defaults to "html".
