@@ -23,12 +23,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install virtualenv asv
 
-      - name: Setup access to branches
-        run: |
-          git remote add upstream https://github.com/sympy/sympy.git
-          git fetch upstream master
-          git fetch upstream 1.12
-
       - name: Configure benchmarks
         run: asv machine --yes --config asv.conf.actions.json
 
