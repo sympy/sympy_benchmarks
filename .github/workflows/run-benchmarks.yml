@@ -10,12 +10,6 @@ jobs:
 
     steps:
 
-      - name: Checkout SymPy
-        uses: actions/checkout@v3
-        with:
-          repository: sympy/sympy
-          fetch-depth: 0
-
       - name: Checkout SymPy Benchmarks
         uses: actions/checkout@v3
         with:
