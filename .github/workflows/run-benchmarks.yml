@@ -12,10 +12,6 @@ jobs:
 
       - name: Checkout SymPy Benchmarks
         uses: actions/checkout@v3
-        with:
-          sparse-checkout: |
-            asv.conf.actions.json
-            benchmarks
 
       - name: Setup Python
         uses: actions/setup-python@v3
