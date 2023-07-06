@@ -28,7 +28,6 @@ jobs:
 
       - name: Setup access to branches
         run: |
-          git submodule add https://github.com/sympy/sympy_benchmarks.git
           git remote add upstream https://github.com/sympy/sympy.git
           git fetch upstream master
           git fetch upstream 1.12
