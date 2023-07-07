@@ -19,114 +19,121 @@ class TimePolyManyGens:
         self.px.is_linear
 
 
-class PolyPrem:
-    """Benchmark for the prem method"""
-
-    def setup(self, n):
-        self.x, *self.y = symbols("x, y1:11")
-        self.R1 = [self.x] + list(self.y)
-        self.R = ZZ[self.R1]
-
-        self.values = {}
-
-        self.f_case1, self.g_case1 = self.generate_poly_case1(n)
-        self.f_case2, self.g_case2 = self.generate_poly_case2(n)
-        self.f_case3, self.g_case3 = self.generate_poly_case3(n)
-        self.f_case4, self.g_case4 = self.generate_poly_case4(n)
-
-        self.fp_case1 = Poly(self.f_case1, self.x, *(self.y)[:n])
-        self.gp_case1 = Poly(self.g_case1, self.x, *(self.y)[:n])
-        self.fpe_case1 = self.R.from_sympy(self.f_case1)
-        self.gpe_case1 = self.R.from_sympy(self.g_case1)
-
-        self.fp_case2 = Poly(self.f_case2, self.x, *(self.y)[:n])
-        self.gp_case2 = Poly(self.g_case2, self.x, *(self.y)[:n])
-        self.fpe_case2 = self.R.from_sympy(self.f_case2)
-        self.gpe_case2 = self.R.from_sympy(self.g_case2)
-
-        self.fp_case3 = Poly(self.f_case3, self.x, *(self.y)[:n])
-        self.gp_case3 = Poly(self.g_case3, self.x, *(self.y)[:n])
-        self.fpe_case3 = self.R.from_sympy(self.f_case3)
-        self.gpe_case3 = self.R.from_sympy(self.g_case3)
-
-        self.fp_case4 = Poly(self.f_case4, self.x, *(self.y)[:n])
-        self.gp_case4 = Poly(self.g_case4, self.x, *(self.y)[:n])
-        self.fpe_case4 = self.R.from_sympy(self.f_case4)
-        self.gpe_case4 = self.R.from_sympy(self.g_case4)
-
-    def generate_poly_case1(self, n):
-        """Linearly dense quartic inputs with quadratic GCDs."""
+class LinearDenseQuadraticGCD:
+    def generate(self, n):
+        self.x, *self.y = symbols("x, y1:9")
         D = (1 + self.x + sum((self.y)[:n])) ** 2
         f = D * (-2 + self.x - sum((self.y)[:n])) ** 2
         g = D * (2 + self.x + sum((self.y)[:n])) ** 2
         return f, g
 
-    def generate_poly_case2(self, n):
-        """Sparse GCD and inputs where degree is proportional to the number of variables."""
+
+class SparseGCDHighDegree:
+    def generate(self, n):
+        self.x, *self.y = symbols("x, y1:9")
         D = 1 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)])
         f = D * (-2 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)]))
         g = D * (2 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)]))
         return f, g
 
-    def generate_poly_case3(self, n):
-        """Quadratic non-monic GCD, F and G have other quadratic factors."""
+
+class QuadraticNonMonicGCD:
+    def generate(self, n):
+        self.x, *self.y = symbols("x, y1:9")
         D = 1 + self.x ** 2 * (self.y)[0] ** 2 + sum([(self.y)[i] ** 2 for i in range(1, n)])
         f = D * (-1 + self.x ** 2 - (self.y)[0] ** 2 + sum([(self.y)[i] ** 2 for i in range(1, n)]))
         g = D * (2 + self.x * (self.y)[0] + sum((self.y)[1:n])) ** 2
         return f, g
 
-    def generate_poly_case4(self, n):
-        """Sparse non-monic quadratic inputs with linear GCDs."""
+
+class SparseNonMonicQuadratic:
+    def generate(self, n):
+        self.x, *self.y = symbols("x, y1:9")
         D = -1 + self.x * prod((self.y)[:n])
         f = D * (3 + self.x * prod((self.y)[:n]))
         g = D * (-3 + self.x * prod((self.y)[:n]))
         return f, g
 
 
+class PolyPrem:
+    """Benchmark for the prem method"""
+
+    def setup(self, n):
+        self.x, *self.y = symbols("x, y1:9")
+        self.R1 = [self.x] + list(self.y)
+        self.R = ZZ[self.R1]
+
+        self.values = {}
+
+        self.f_LinearDenseQuadraticGCD, self.g_LinearDenseQuadraticGCD = LinearDenseQuadraticGCD().generate(n)
+        self.f_SparseGCDHighDegree, self.g_SparseGCDHighDegree = SparseGCDHighDegree().generate(n)
+        self.f_QuadraticNonMonicGCD, self.g_QuadraticNonMonicGCD = QuadraticNonMonicGCD().generate(n)
+        self.f_SparseNonMonicQuadratic, self.g_SparseNonMonicQuadratic = SparseNonMonicQuadratic().generate(n)
+
+        self.fp_LinearDenseQuadraticGCD = Poly(self.f_LinearDenseQuadraticGCD, self.x, *(self.y)[:n])
+        self.gp_LinearDenseQuadraticGCD = Poly(self.g_LinearDenseQuadraticGCD, self.x, *(self.y)[:n])
+        self.fpe_LinearDenseQuadraticGCD = self.R.from_sympy(self.f_LinearDenseQuadraticGCD)
+        self.gpe_LinearDenseQuadraticGCD = self.R.from_sympy(self.g_LinearDenseQuadraticGCD)
+
+        self.fp_SparseGCDHighDegree = Poly(self.f_SparseGCDHighDegree, self.x, *(self.y)[:n])
+        self.gp_SparseGCDHighDegree = Poly(self.g_SparseGCDHighDegree, self.x, *(self.y)[:n])
+        self.fpe_SparseGCDHighDegree = self.R.from_sympy(self.f_SparseGCDHighDegree)
+        self.gpe_SparseGCDHighDegree = self.R.from_sympy(self.g_SparseGCDHighDegree)
+
+        self.fp_QuadraticNonMonicGCD = Poly(self.f_QuadraticNonMonicGCD, self.x, *(self.y)[:n])
+        self.gp_QuadraticNonMonicGCD = Poly(self.g_QuadraticNonMonicGCD, self.x, *(self.y)[:n])
+        self.fpe_QuadraticNonMonicGCD = self.R.from_sympy(self.f_QuadraticNonMonicGCD)
+        self.gpe_QuadraticNonMonicGCD = self.R.from_sympy(self.g_QuadraticNonMonicGCD)
+
+        self.fp_SparseNonMonicQuadratic = Poly(self.f_SparseNonMonicQuadratic, self.x, *(self.y)[:n])
+        self.gp_SparseNonMonicQuadratic = Poly(self.g_SparseNonMonicQuadratic, self.x, *(self.y)[:n])
+        self.fpe_SparseNonMonicQuadratic = self.R.from_sympy(self.f_SparseNonMonicQuadratic)
+        self.gpe_SparseNonMonicQuadratic = self.R.from_sympy(self.g_SparseNonMonicQuadratic)
+
+
 class TimePolyPremFast(PolyPrem):
 
-    # Test for n=1, 5, 8, 10 with the fast methods
-    params = [1, 5, 8, 10]
+    # Test for n=1, 3, 5, 8 with the fast methods
+    params = [1, 3, 5, 8]
 
-    def time_Polyprem_case1(self, n):
-        self.values['Polyprem_case1'] = self.fp_case1.prem(self.gp_case1)
+    def time_prem_SparseGCDHighDegree(self, n):
+        self.values['prem_SparseGCDHighDegree'] = prem(self.f_SparseGCDHighDegree, self.g_SparseGCDHighDegree, self.x)
 
-    def time_PolyElement_prem_case1(self, n):
-        self.values['PolyElement_prem_case1'] = self.fpe_case1.prem(self.gpe_case1)
+    def time_prem_SparseNonMonicQuadratic(self, n):
+        self.values['prem_SparseNonMonicQuadratic'] = prem(self.f_SparseNonMonicQuadratic, self.g_SparseNonMonicQuadratic, self.x)
 
-    def time_prem_case2(self, n):
-        self.values['prem_case2'] = prem(self.f_case2, self.g_case2, self.x)
+    def time_Polyprem_SparseGCDHighDegree(self, n):
+        self.values['Polyprem_SparseGCDHighDegree'] = self.fp_SparseGCDHighDegree.prem(self.gp_SparseGCDHighDegree)
 
-    def time_Polyprem_case2(self, n):
-        self.values['Polyprem_case2'] = self.fp_case2.prem(self.gp_case2)
+    def time_Polyprem_QuadraticNonMonicGCD(self, n):
+        self.values['Polyprem_QuadraticNonMonicGCD'] = self.fp_QuadraticNonMonicGCD.prem(self.gp_QuadraticNonMonicGCD)
 
-    def time_PolyElement_prem_case2(self, n):
-        self.values['PolyElement_prem_case2'] = self.fpe_case2.prem(self.gpe_case2)
+    def time_Polyprem_SparseNonMonicQuadratic(self, n):
+        self.values['Polyprem_SparseNonMonicQuadratic'] = self.fp_SparseNonMonicQuadratic.prem(self.gp_SparseNonMonicQuadratic)
 
-    def time_Polyprem_case3(self, n):
-        self.values['Polyprem_case3'] = self.fp_case3.prem(self.gp_case3)
+    def time_PolyElement_prem_SparseGCDHighDegree(self, n):
+        self.values['PolyElement_prem_SparseGCDHighDegree'] = self.fpe_SparseGCDHighDegree.prem(self.gpe_SparseGCDHighDegree)
 
-    def time_PolyElement_prem_case3(self, n):
-        self.values['PolyElement_prem_case3'] = self.fpe_case3.prem(self.gpe_case3)
-
-    def time_prem_case4(self, n):
-        self.values['prem_case4'] = prem(self.f_case4, self.g_case4, self.x)
-
-    def time_Polyprem_case4(self, n):
-        self.values['Polyprem_case4'] = self.fp_case4.prem(self.gp_case4)
-
-    def time_PolyElement_prem_case4(self, n):
-        self.values['PolyElement_prem_case4'] = self.fpe_case4.prem(self.gpe_case4)
-
+    def time_PolyElement_prem_SparseNonMonicQuadratic(self, n):
+        self.values['PolyElement_prem_SparseNonMonicQuadratic'] = self.fpe_SparseNonMonicQuadratic.prem(self.gpe_SparseNonMonicQuadratic)
 
 
 class TimePolyPremSlow(PolyPrem):
 
     # This methods are slow for n=8 and n=10.
-    params = [1, 5]
+    params = [1, 3, 5]
 
-    def time_prem_case1(self, n):
-        self.values['prem_case1'] = prem(self.f_case1, self.g_case1, self.x)
+    def time_prem_LinearDenseQuadraticGCD(self, n):
+        self.values['prem_LinearDenseQuadraticGCD'] = prem(self.f_LinearDenseQuadraticGCD, self.g_LinearDenseQuadraticGCD, self.x)
 
-    def time_prem_case3(self, n):
-        self.values['prem_case3'] = prem(self.f_case3, self.g_case3, self.x)
+    def time_prem_QuadraticNonMonicGCD(self, n):
+        self.values['prem_QuadraticNonMonicGCD'] = prem(self.f_QuadraticNonMonicGCD, self.g_QuadraticNonMonicGCD, self.x)
+
+    def time_Polyprem_LinearDenseQuadraticGCD(self, n):
+        self.values['Polyprem_LinearDenseQuadraticGCD'] = self.fp_LinearDenseQuadraticGCD.prem(self.gp_LinearDenseQuadraticGCD)
+
+    def time_PolyElement_prem_LinearDenseQuadraticGCD(self, n):
+        self.values['PolyElement_prem_LinearDenseQuadraticGCD'] = self.fpe_LinearDenseQuadraticGCD.prem(self.gpe_LinearDenseQuadraticGCD)
+
+    def time_PolyElement_prem_QuadraticNonMonicGCD(self, n):
+        self.values['PolyElement_prem_QuadraticNonMonicGCD'] = self.fpe_QuadraticNonMonicGCD.prem(self.gpe_QuadraticNonMonicGCD)
