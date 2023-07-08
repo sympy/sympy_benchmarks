@@ -22,37 +22,53 @@ class TimePolyManyGens:
 class LinearDenseQuadraticGCD:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
+        self.R1 = [self.x] + list(self.y)
+        self.R = ZZ[self.R1]
         D = (1 + self.x + sum((self.y)[:n])) ** 2
         f = D * (-2 + self.x - sum((self.y)[:n])) ** 2
         g = D * (2 + self.x + sum((self.y)[:n])) ** 2
-        return f, g
+        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
+        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe
 
 
 class SparseGCDHighDegree:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
+        self.R1 = [self.x] + list(self.y)
+        self.R = ZZ[self.R1]
         D = 1 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)])
         f = D * (-2 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)]))
         g = D * (2 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)]))
-        return f, g
+        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
+        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe
 
 
 class QuadraticNonMonicGCD:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
+        self.R1 = [self.x] + list(self.y)
+        self.R = ZZ[self.R1]
         D = 1 + self.x ** 2 * (self.y)[0] ** 2 + sum([(self.y)[i] ** 2 for i in range(1, n)])
         f = D * (-1 + self.x ** 2 - (self.y)[0] ** 2 + sum([(self.y)[i] ** 2 for i in range(1, n)]))
         g = D * (2 + self.x * (self.y)[0] + sum((self.y)[1:n])) ** 2
-        return f, g
+        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
+        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe
 
 
 class SparseNonMonicQuadratic:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
+        self.R1 = [self.x] + list(self.y)
+        self.R = ZZ[self.R1]
         D = -1 + self.x * prod((self.y)[:n])
         f = D * (3 + self.x * prod((self.y)[:n]))
         g = D * (-3 + self.x * prod((self.y)[:n]))
-        return f, g
+        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
+        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe
 
 
 class PolyPrem:
@@ -65,30 +81,21 @@ class PolyPrem:
 
         self.values = {}
 
-        self.f_LinearDenseQuadraticGCD, self.g_LinearDenseQuadraticGCD = LinearDenseQuadraticGCD().generate(n)
-        self.f_SparseGCDHighDegree, self.g_SparseGCDHighDegree = SparseGCDHighDegree().generate(n)
-        self.f_QuadraticNonMonicGCD, self.g_QuadraticNonMonicGCD = QuadraticNonMonicGCD().generate(n)
-        self.f_SparseNonMonicQuadratic, self.g_SparseNonMonicQuadratic = SparseNonMonicQuadratic().generate(n)
+        (self.f_LinearDenseQuadraticGCD, self.g_LinearDenseQuadraticGCD,
+        self.fp_LinearDenseQuadraticGCD, self.gp_LinearDenseQuadraticGCD,
+        self.fpe_LinearDenseQuadraticGCD, self.gpe_LinearDenseQuadraticGCD) = LinearDenseQuadraticGCD().generate(n)
 
-        self.fp_LinearDenseQuadraticGCD = Poly(self.f_LinearDenseQuadraticGCD, self.x, *(self.y)[:n])
-        self.gp_LinearDenseQuadraticGCD = Poly(self.g_LinearDenseQuadraticGCD, self.x, *(self.y)[:n])
-        self.fpe_LinearDenseQuadraticGCD = self.R.from_sympy(self.f_LinearDenseQuadraticGCD)
-        self.gpe_LinearDenseQuadraticGCD = self.R.from_sympy(self.g_LinearDenseQuadraticGCD)
+        (self.f_SparseGCDHighDegree, self.g_SparseGCDHighDegree,
+        self.fp_SparseGCDHighDegree, self.gp_SparseGCDHighDegree,
+        self.fpe_SparseGCDHighDegree, self.gpe_SparseGCDHighDegree) = SparseGCDHighDegree().generate(n)
 
-        self.fp_SparseGCDHighDegree = Poly(self.f_SparseGCDHighDegree, self.x, *(self.y)[:n])
-        self.gp_SparseGCDHighDegree = Poly(self.g_SparseGCDHighDegree, self.x, *(self.y)[:n])
-        self.fpe_SparseGCDHighDegree = self.R.from_sympy(self.f_SparseGCDHighDegree)
-        self.gpe_SparseGCDHighDegree = self.R.from_sympy(self.g_SparseGCDHighDegree)
+        (self.f_QuadraticNonMonicGCD, self.g_QuadraticNonMonicGCD,
+        self.fp_QuadraticNonMonicGCD, self.gp_QuadraticNonMonicGCD,
+        self.fpe_QuadraticNonMonicGCD, self.gpe_QuadraticNonMonicGCD) = QuadraticNonMonicGCD().generate(n)
 
-        self.fp_QuadraticNonMonicGCD = Poly(self.f_QuadraticNonMonicGCD, self.x, *(self.y)[:n])
-        self.gp_QuadraticNonMonicGCD = Poly(self.g_QuadraticNonMonicGCD, self.x, *(self.y)[:n])
-        self.fpe_QuadraticNonMonicGCD = self.R.from_sympy(self.f_QuadraticNonMonicGCD)
-        self.gpe_QuadraticNonMonicGCD = self.R.from_sympy(self.g_QuadraticNonMonicGCD)
-
-        self.fp_SparseNonMonicQuadratic = Poly(self.f_SparseNonMonicQuadratic, self.x, *(self.y)[:n])
-        self.gp_SparseNonMonicQuadratic = Poly(self.g_SparseNonMonicQuadratic, self.x, *(self.y)[:n])
-        self.fpe_SparseNonMonicQuadratic = self.R.from_sympy(self.f_SparseNonMonicQuadratic)
-        self.gpe_SparseNonMonicQuadratic = self.R.from_sympy(self.g_SparseNonMonicQuadratic)
+        (self.f_SparseNonMonicQuadratic, self.g_SparseNonMonicQuadratic,
+        self.fp_SparseNonMonicQuadratic, self.gp_SparseNonMonicQuadratic,
+        self.fpe_SparseNonMonicQuadratic, self.gpe_SparseNonMonicQuadratic) = SparseNonMonicQuadratic().generate(n)
 
 
 class TimePolyPremFast(PolyPrem):
@@ -120,7 +127,7 @@ class TimePolyPremFast(PolyPrem):
 
 class TimePolyPremSlow(PolyPrem):
 
-    # This methods are slow for n=8 and n=10.
+    # This methods are slow for n=8.
     params = [1, 3, 5]
 
     def time_prem_LinearDenseQuadraticGCD(self, n):
