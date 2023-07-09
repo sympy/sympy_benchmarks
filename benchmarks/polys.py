@@ -18,8 +18,7 @@ class TimePolyManyGens:
     def time_is_linear(self, n):
         self.px.is_linear
 
-
-class LinearDenseQuadraticGCD:
+class _LinearDenseQuadraticGCD:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
@@ -32,7 +31,7 @@ class LinearDenseQuadraticGCD:
         return f, g, fp, gp, fpe, gpe
 
 
-class SparseGCDHighDegree:
+class _SparseGCDHighDegree:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
@@ -45,7 +44,7 @@ class SparseGCDHighDegree:
         return f, g, fp, gp, fpe, gpe
 
 
-class QuadraticNonMonicGCD:
+class _QuadraticNonMonicGCD:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
@@ -58,7 +57,7 @@ class QuadraticNonMonicGCD:
         return f, g, fp, gp, fpe, gpe
 
 
-class SparseNonMonicQuadratic:
+class _SparseNonMonicQuadratic:
     def generate(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
@@ -70,77 +69,38 @@ class SparseNonMonicQuadratic:
         fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
         return f, g, fp, gp, fpe, gpe
 
-
-class PolyPrem:
-    """Benchmark for the prem method"""
-
+class _PolyGCDExample:
     def setup(self, n):
-        self.x, *self.y = symbols("x, y1:9")
-        self.R1 = [self.x] + list(self.y)
-        self.R = ZZ[self.R1]
-
+        (self.f, self.g, self.fp, self.gp, self.fpe, self.gpe) = self.generate(n)
         self.values = {}
+        self.x = symbols("x")
 
-        (self.f_LinearDenseQuadraticGCD, self.g_LinearDenseQuadraticGCD,
-        self.fp_LinearDenseQuadraticGCD, self.gp_LinearDenseQuadraticGCD,
-        self.fpe_LinearDenseQuadraticGCD, self.gpe_LinearDenseQuadraticGCD) = LinearDenseQuadraticGCD().generate(n)
+class _TimePREM(_PolyGCDExample):
 
-        (self.f_SparseGCDHighDegree, self.g_SparseGCDHighDegree,
-        self.fp_SparseGCDHighDegree, self.gp_SparseGCDHighDegree,
-        self.fpe_SparseGCDHighDegree, self.gpe_SparseGCDHighDegree) = SparseGCDHighDegree().generate(n)
+    def time_prem(self, n):
+        self.values['prem'] = prem(self.f, self.g, self.x)
 
-        (self.f_QuadraticNonMonicGCD, self.g_QuadraticNonMonicGCD,
-        self.fp_QuadraticNonMonicGCD, self.gp_QuadraticNonMonicGCD,
-        self.fpe_QuadraticNonMonicGCD, self.gpe_QuadraticNonMonicGCD) = QuadraticNonMonicGCD().generate(n)
+    def time_prem_PolyElement(self, n):
+        self.values['prem_PolyElement'] = self.fpe.prem(self.gpe)
 
-        (self.f_SparseNonMonicQuadratic, self.g_SparseNonMonicQuadratic,
-        self.fp_SparseNonMonicQuadratic, self.gp_SparseNonMonicQuadratic,
-        self.fpe_SparseNonMonicQuadratic, self.gpe_SparseNonMonicQuadratic) = SparseNonMonicQuadratic().generate(n)
+    def time_Poly_prem(self, n):
+        self.values['Poly_prem'] = self.fp.prem(self.gp)
 
+class TimePREMLinearDenseQuadraticGCD(_LinearDenseQuadraticGCD, _TimePREM):
+    """Calculate time for Linearly dense quartic inputs with quadratic GCDs polynomials."""
 
-class TimePolyPremFast(PolyPrem):
+    params = [1, 3, 5] # This case is slow for n=8.
 
-    # Test for n=1, 3, 5, 8 with the fast methods
+class TimePREMQuadraticNonMonicGCD(_QuadraticNonMonicGCD, _TimePREM):
+    """Calculate time for Quadratic non-monic GCD, F and G have other quadratic factors polynomials."""
+
+    params = [1, 3, 5] # This case is slow for n=8.
+
+class TimePREMSparseGCDHighDegree(_SparseGCDHighDegree, _TimePREM):
+    """Calculate Sparse GCD and inputs where degree is proportional to the number of variables polynomials."""
     params = [1, 3, 5, 8]
 
-    def time_prem_SparseGCDHighDegree(self, n):
-        self.values['prem_SparseGCDHighDegree'] = prem(self.f_SparseGCDHighDegree, self.g_SparseGCDHighDegree, self.x)
+class TimePREMSparseNonMonicQuadratic(_SparseNonMonicQuadratic, _TimePREM):
+    """Calculate time for Sparse non-monic quadratic inputs with linear GCDs polynomials."""
 
-    def time_prem_SparseNonMonicQuadratic(self, n):
-        self.values['prem_SparseNonMonicQuadratic'] = prem(self.f_SparseNonMonicQuadratic, self.g_SparseNonMonicQuadratic, self.x)
-
-    def time_Polyprem_SparseGCDHighDegree(self, n):
-        self.values['Polyprem_SparseGCDHighDegree'] = self.fp_SparseGCDHighDegree.prem(self.gp_SparseGCDHighDegree)
-
-    def time_Polyprem_QuadraticNonMonicGCD(self, n):
-        self.values['Polyprem_QuadraticNonMonicGCD'] = self.fp_QuadraticNonMonicGCD.prem(self.gp_QuadraticNonMonicGCD)
-
-    def time_Polyprem_SparseNonMonicQuadratic(self, n):
-        self.values['Polyprem_SparseNonMonicQuadratic'] = self.fp_SparseNonMonicQuadratic.prem(self.gp_SparseNonMonicQuadratic)
-
-    def time_PolyElement_prem_SparseGCDHighDegree(self, n):
-        self.values['PolyElement_prem_SparseGCDHighDegree'] = self.fpe_SparseGCDHighDegree.prem(self.gpe_SparseGCDHighDegree)
-
-    def time_PolyElement_prem_SparseNonMonicQuadratic(self, n):
-        self.values['PolyElement_prem_SparseNonMonicQuadratic'] = self.fpe_SparseNonMonicQuadratic.prem(self.gpe_SparseNonMonicQuadratic)
-
-
-class TimePolyPremSlow(PolyPrem):
-
-    # This methods are slow for n=8.
-    params = [1, 3, 5]
-
-    def time_prem_LinearDenseQuadraticGCD(self, n):
-        self.values['prem_LinearDenseQuadraticGCD'] = prem(self.f_LinearDenseQuadraticGCD, self.g_LinearDenseQuadraticGCD, self.x)
-
-    def time_prem_QuadraticNonMonicGCD(self, n):
-        self.values['prem_QuadraticNonMonicGCD'] = prem(self.f_QuadraticNonMonicGCD, self.g_QuadraticNonMonicGCD, self.x)
-
-    def time_Polyprem_LinearDenseQuadraticGCD(self, n):
-        self.values['Polyprem_LinearDenseQuadraticGCD'] = self.fp_LinearDenseQuadraticGCD.prem(self.gp_LinearDenseQuadraticGCD)
-
-    def time_PolyElement_prem_LinearDenseQuadraticGCD(self, n):
-        self.values['PolyElement_prem_LinearDenseQuadraticGCD'] = self.fpe_LinearDenseQuadraticGCD.prem(self.gpe_LinearDenseQuadraticGCD)
-
-    def time_PolyElement_prem_QuadraticNonMonicGCD(self, n):
-        self.values['PolyElement_prem_QuadraticNonMonicGCD'] = self.fpe_QuadraticNonMonicGCD.prem(self.gpe_QuadraticNonMonicGCD)
+    params = [1, 3, 5, 8]
