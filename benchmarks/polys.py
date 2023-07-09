@@ -1,4 +1,4 @@
-from sympy import symbols, prod, prem
+from sympy import symbols, prod, prem, rem, degree, LC
 from sympy.polys import ZZ, Poly
 
 
@@ -69,38 +69,49 @@ class _SparseNonMonicQuadratic:
         fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
         return f, g, fp, gp, fpe, gpe
 
-class _PolyGCDExample:
-    def setup(self, n):
+
+class _TimePREM:
+
+    def setup(self, method, n):
         (self.f, self.g, self.fp, self.gp, self.fpe, self.gpe) = self.generate(n)
         self.values = {}
         self.x = symbols("x")
+        self.ref = rem((self.f)*LC(self.g, self.x)**degree(self.g, self.x), self.g, self.x) # result for prem, Poly_prem and PolyElement_prem method
+        if method == 'prem':
+            self.func = lambda: prem(self.f, self.g, self.x)
 
-class _TimePREM(_PolyGCDExample):
+        elif method == 'Poly_prem':
+            self.func = lambda: self.fp.prem(self.gp)
 
-    def time_prem(self, n):
-        self.values['prem'] = prem(self.f, self.g, self.x)
+        elif method == 'PolyElement_prem':
+            self.func = lambda: self.fpe.prem(self.gpe)
 
-    def time_prem_PolyElement(self, n):
-        self.values['prem_PolyElement'] = self.fpe.prem(self.gpe)
+    def teardown(self, method, n):
+        for key, val in self.values.items():
+            if (self.ref - val).simplify() != 0:
+                raise ValueError("Incorrect result, invalid timing:"
+                                    " %s != %s" % (self.ref, val))
 
-    def time_Poly_prem(self, n):
-        self.values['Poly_prem'] = self.fp.prem(self.gp)
+    def time_prem_methods(self, method, n):
+        self.values[str(method)] = self.func()
+
 
 class TimePREMLinearDenseQuadraticGCD(_LinearDenseQuadraticGCD, _TimePREM):
     """Calculate time for Linearly dense quartic inputs with quadratic GCDs polynomials."""
 
-    params = [1, 3, 5] # This case is slow for n=8.
+    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5)] # This case is slow for n=8.
 
 class TimePREMQuadraticNonMonicGCD(_QuadraticNonMonicGCD, _TimePREM):
     """Calculate time for Quadratic non-monic GCD, F and G have other quadratic factors polynomials."""
 
-    params = [1, 3, 5] # This case is slow for n=8.
+    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5)] # This case is slow for n=8.
 
 class TimePREMSparseGCDHighDegree(_SparseGCDHighDegree, _TimePREM):
     """Calculate Sparse GCD and inputs where degree is proportional to the number of variables polynomials."""
-    params = [1, 3, 5, 8]
+
+    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5, 8)]
 
 class TimePREMSparseNonMonicQuadratic(_SparseNonMonicQuadratic, _TimePREM):
     """Calculate time for Sparse non-monic quadratic inputs with linear GCDs polynomials."""
 
-    params = [1, 3, 5, 8]
+    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5, 8)]
