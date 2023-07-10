@@ -71,12 +71,13 @@ class _SparseNonMonicQuadratic:
 
 
 class _TimePREM:
-
     def setup(self, method, n):
         (self.f, self.g, self.fp, self.gp, self.fpe, self.gpe) = self.generate(n)
         self.values = {}
         self.x = symbols("x")
-        self.ref = rem((self.f)*LC(self.g, self.x)**degree(self.g, self.x), self.g, self.x) # result for prem, Poly_prem and PolyElement_prem method
+        self.ref = rem((self.f)*LC(self.g, self.x)**(degree(self.f, self.x) - degree(self.g, self.x) + 1), self.g, self.x) # correct results for prem and Poly_prem methods.
+        self.ref_1  = (self.fpe*(self.gpe.LC)**(self.fpe.degree() - self.gpe.degree() + 1)).rem(self.gpe) # correct result for PolyElement_prem method.
+
         if method == 'prem':
             self.func = lambda: prem(self.f, self.g, self.x)
 
@@ -88,7 +89,12 @@ class _TimePREM:
 
     def teardown(self, method, n):
         for key, val in self.values.items():
-            if (self.ref - val).simplify() != 0:
+            if key == 'PolyElement_prem':
+                if (self.ref_1 != val):
+                    raise ValueError("Incorrect result, invalid timing:"
+                                        " %s != %s" % (self.ref_1, val))
+
+            elif (self.ref - val).simplify() != 0:
                 raise ValueError("Incorrect result, invalid timing:"
                                     " %s != %s" % (self.ref, val))
 
