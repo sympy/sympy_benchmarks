@@ -1,7 +1,6 @@
 from sympy import symbols, prod, prem, rem, degree, LC
 from sympy.polys import ZZ, Poly
 
-
 class TimePolyManyGens:
     """Time using a Poly with many generators"""
 
@@ -17,6 +16,7 @@ class TimePolyManyGens:
 
     def time_is_linear(self, n):
         self.px.is_linear
+
 
 class _LinearDenseQuadraticGCD:
     def generate(self, n):
@@ -71,26 +71,31 @@ class _SparseNonMonicQuadratic:
 
 
 class _TimePREM:
+    """Benchmarks for `prem` method in polynomials."""
+
     def setup(self, method, n):
         (self.f, self.g, self.fp, self.gp, self.fpe, self.gpe) = self.generate(n)
         self.values = {}
         self.x = symbols("x")
-        self.ref = rem((self.f)*LC(self.g, self.x)**(degree(self.f, self.x) - degree(self.g, self.x) + 1), self.g, self.x) # correct results for prem and Poly_prem methods.
-        self.ref_1  = (self.fpe*(self.gpe.LC)**(self.fpe.degree() - self.gpe.degree() + 1)).rem(self.gpe) # correct result for PolyElement_prem method.
+        self.R1 = [self.x] + list(self.y)
+        self.R = ZZ[self.R1]
+
+        self.ref = rem((self.f)*LC(self.g, self.x)**(degree(self.f, self.x) - degree(self.g, self.x) + 1), self.g, self.x) # correct results for prem and poly methods.
+        self.ref_1  = (self.fpe*(self.R(self.gpe.as_expr().as_poly(self.x).LC()))**(self.fpe.degree() - self.gpe.degree() + 1)).rem(self.gpe) # correct result for sparse method.
 
         if method == 'prem':
             self.func = lambda: prem(self.f, self.g, self.x)
 
-        elif method == 'Poly_prem':
+        elif method == 'poly':
             self.func = lambda: self.fp.prem(self.gp)
 
-        elif method == 'PolyElement_prem':
+        elif method == 'sparse':
             self.func = lambda: self.fpe.prem(self.gpe)
 
     def teardown(self, method, n):
         for key, val in self.values.items():
-            if key == 'PolyElement_prem':
-                if (self.ref_1 != val):
+            if key == 'sparse':
+                if (self.ref_1 - val) != 0:
                     raise ValueError("Incorrect result, invalid timing:"
                                         " %s != %s" % (self.ref_1, val))
 
@@ -105,19 +110,22 @@ class _TimePREM:
 class TimePREMLinearDenseQuadraticGCD(_LinearDenseQuadraticGCD, _TimePREM):
     """Calculate time for Linearly dense quartic inputs with quadratic GCDs polynomials."""
 
-    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5)] # This case is slow for n=8.
+    params = [('prem', 'poly', 'sparse'), (1, 3 , 5)] # This case is slow for n=8.
+
 
 class TimePREMQuadraticNonMonicGCD(_QuadraticNonMonicGCD, _TimePREM):
     """Calculate time for Quadratic non-monic GCD, F and G have other quadratic factors polynomials."""
 
-    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5)] # This case is slow for n=8.
+    params = [('prem', 'poly', 'sparse'), (1, 3 , 5)] # This case is slow for n=8.
+
 
 class TimePREMSparseGCDHighDegree(_SparseGCDHighDegree, _TimePREM):
     """Calculate Sparse GCD and inputs where degree is proportional to the number of variables polynomials."""
 
-    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5, 8)]
+    params = [('prem', 'poly', 'sparse'), (1, 3 , 5, 8)]
+
 
 class TimePREMSparseNonMonicQuadratic(_SparseNonMonicQuadratic, _TimePREM):
     """Calculate time for Sparse non-monic quadratic inputs with linear GCDs polynomials."""
 
-    params = [('prem', 'Poly_prem', 'PolyElement_prem'), (1, 3 , 5, 8)]
+    params = [('prem', 'poly', 'sparse'), (1, 3 , 5, 8)]
