@@ -23,12 +23,13 @@ class _LinearDenseQuadraticGCD:
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
-        D = (1 + self.x + sum((self.y)[:n])) ** 2
-        f = D * (-2 + self.x - sum((self.y)[:n])) ** 2
-        g = D * (2 + self.x + sum((self.y)[:n])) ** 2
-        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
-        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
-        return f, g, fp, gp, fpe, gpe
+        x, y, R = self.x, self.y, self.R
+        D = (1 + x + sum(y[:n])) ** 2
+        f = D * (-2 + x - sum(y[:n])) ** 2
+        g = D * (2 + x + sum(y[:n])) ** 2
+        fp, gp = Poly(f, x, *y[:n]), Poly(g, x, *y[:n])
+        fpe, gpe = R.from_sympy(f), R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe, x, y, R
 
 
 class _SparseGCDHighDegree:
@@ -36,12 +37,13 @@ class _SparseGCDHighDegree:
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
-        D = 1 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)])
-        f = D * (-2 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)]))
-        g = D * (2 + self.x ** (n + 1) + sum([(self.y)[i] ** (n + 1) for i in range(n)]))
-        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
-        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
-        return f, g, fp, gp, fpe, gpe
+        x, y, R = self.x, self.y, self.R
+        D = 1 + x ** (n + 1) + sum([y[i] ** (n + 1) for i in range(n)])
+        f = D * (-2 + x ** (n + 1) + sum([y[i] ** (n + 1) for i in range(n)]))
+        g = D * (2 + x ** (n + 1) + sum([y[i] ** (n + 1) for i in range(n)]))
+        fp, gp = Poly(f, x, *y[:n]), Poly(g, x, *y[:n])
+        fpe, gpe = R.from_sympy(f), R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe, x, y, R
 
 
 class _QuadraticNonMonicGCD:
@@ -49,12 +51,13 @@ class _QuadraticNonMonicGCD:
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
-        D = 1 + self.x ** 2 * (self.y)[0] ** 2 + sum([(self.y)[i] ** 2 for i in range(1, n)])
-        f = D * (-1 + self.x ** 2 - (self.y)[0] ** 2 + sum([(self.y)[i] ** 2 for i in range(1, n)]))
-        g = D * (2 + self.x * (self.y)[0] + sum((self.y)[1:n])) ** 2
-        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
-        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
-        return f, g, fp, gp, fpe, gpe
+        x, y, R = self.x, self.y, self.R
+        D = 1 + x ** 2 * y[0] ** 2 + sum([y[i] ** 2 for i in range(1, n)])
+        f = D * (-1 + x ** 2 - y[0] ** 2 + sum([y[i] ** 2 for i in range(1, n)]))
+        g = D * (2 + x * y[0] + sum(y[1:n])) ** 2
+        fp, gp = Poly(f, x, *y[:n]), Poly(g, x, *y[:n])
+        fpe, gpe = R.from_sympy(f), R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe, x, y, R
 
 
 class _SparseNonMonicQuadratic:
@@ -62,26 +65,40 @@ class _SparseNonMonicQuadratic:
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
-        D = -1 + self.x * prod((self.y)[:n])
-        f = D * (3 + self.x * prod((self.y)[:n]))
-        g = D * (-3 + self.x * prod((self.y)[:n]))
-        fp, gp = Poly(f, self.x, *(self.y)[:n]), Poly(g, self.x, *(self.y)[:n])
-        fpe, gpe = self.R.from_sympy(f), self.R.from_sympy(g)
-        return f, g, fp, gp, fpe, gpe
+        x, y, R = self.x, self.y, self.R
+        D = -1 + x * prod(y[:n])
+        f = D * (3 + x * prod(y[:n]))
+        g = D * (-3 + x * prod(y[:n]))
+        fp, gp = Poly(f, x, *y[:n]), Poly(g, x, *y[:n])
+        fpe, gpe = R.from_sympy(f), R.from_sympy(g)
+        return f, g, fp, gp, fpe, gpe, x, y, R
 
 
 class _TimePREM:
     """Benchmarks for `prem` method in polynomials."""
 
-    def setup(self, method, n):
-        (self.f, self.g, self.fp, self.gp, self.fpe, self.gpe) = self.generate(n)
-        self.values = {}
-        self.x = symbols("x")
-        self.R1 = [self.x] + list(self.y)
-        self.R = ZZ[self.R1]
+    def setup_polys(self, n):
+        (f, g, fp, gp, fpe, gpe, x, y, R) = self.generate(n)
 
-        self.ref = rem((self.f)*LC(self.g, self.x)**(degree(self.f, self.x) - degree(self.g, self.x) + 1), self.g, self.x) # correct results for prem and poly methods.
-        self.ref_1  = (self.fpe*(self.R(self.gpe.as_expr().as_poly(self.x).LC()))**(self.fpe.degree() - self.gpe.degree() + 1)).rem(self.gpe) # correct result for sparse method.
+        self.values = {}
+        self.f = f
+        self.g = g
+        self.fp = fp
+        self.gp = gp
+        self.fpe = fpe
+        self.gpe = gpe
+        self.x = x
+        self.y = y
+        self.R = R
+
+    def setup(self, method, n):
+        self.setup_polys(n)
+
+        f, g, x, R = self.f, self.g, self.x, self.R
+        prem_f_g_x = rem(f * LC(g, x) ** (degree(f, x) - degree(g, x) + 1), g, x)
+
+        self.ref_expr = prem_f_g_x
+        self.ref_ring = R(prem_f_g_x.as_expr())
 
         if method == 'prem':
             self.func = lambda: prem(self.f, self.g, self.x)
@@ -95,13 +112,13 @@ class _TimePREM:
     def teardown(self, method, n):
         for key, val in self.values.items():
             if key == 'sparse':
-                if (self.ref_1 - val) != 0:
+                if (self.ref_ring - val) != 0:
                     raise ValueError("Incorrect result, invalid timing:"
-                                        " %s != %s" % (self.ref_1, val))
+                                        " %s != %s" % (self.ref_ring, val))
 
-            elif (self.ref - val).simplify() != 0:
+            elif (self.ref_expr - val).simplify() != 0:
                 raise ValueError("Incorrect result, invalid timing:"
-                                    " %s != %s" % (self.ref, val))
+                                    " %s != %s" % (self.ref_expr, val))
 
     def time_prem_methods(self, method, n):
         self.values[str(method)] = self.func()
