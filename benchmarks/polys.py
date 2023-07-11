@@ -19,7 +19,7 @@ class TimePolyManyGens:
 
 
 class _LinearDenseQuadraticGCD:
-    def generate(self, n):
+    def setup_polys(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
@@ -33,7 +33,7 @@ class _LinearDenseQuadraticGCD:
 
 
 class _SparseGCDHighDegree:
-    def generate(self, n):
+    def setup_polys(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
@@ -47,7 +47,7 @@ class _SparseGCDHighDegree:
 
 
 class _QuadraticNonMonicGCD:
-    def generate(self, n):
+    def setup_polys(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
@@ -61,7 +61,7 @@ class _QuadraticNonMonicGCD:
 
 
 class _SparseNonMonicQuadratic:
-    def generate(self, n):
+    def setup_polys(self, n):
         self.x, *self.y = symbols("x, y1:9")
         self.R1 = [self.x] + list(self.y)
         self.R = ZZ[self.R1]
@@ -77,39 +77,26 @@ class _SparseNonMonicQuadratic:
 class _TimePREM:
     """Benchmarks for `prem` method in polynomials."""
 
-    def setup_polys(self, n):
-        (f, g, fp, gp, fpe, gpe, x, y, R) = self.generate(n)
+    def setup(self, n, method):
+        (f, g, fp, gp, fpe, gpe, x, y, R) = self.setup_polys(n)
 
         self.values = {}
-        self.f = f
-        self.g = g
-        self.fp = fp
-        self.gp = gp
-        self.fpe = fpe
-        self.gpe = gpe
-        self.x = x
-        self.y = y
-        self.R = R
 
-    def setup(self, method, n):
-        self.setup_polys(n)
-
-        f, g, x, R = self.f, self.g, self.x, self.R
         prem_f_g_x = rem(f * LC(g, x) ** (degree(f, x) - degree(g, x) + 1), g, x)
 
         self.ref_expr = prem_f_g_x
         self.ref_ring = R(prem_f_g_x.as_expr())
 
         if method == 'prem':
-            self.func = lambda: prem(self.f, self.g, self.x)
+            self.func = lambda: prem(f, g, x)
 
         elif method == 'poly':
-            self.func = lambda: self.fp.prem(self.gp)
+            self.func = lambda: fp.prem(gp)
 
         elif method == 'sparse':
-            self.func = lambda: self.fpe.prem(self.gpe)
+            self.func = lambda: fpe.prem(gpe)
 
-    def teardown(self, method, n):
+    def teardown(self, n, method):
         for key, val in self.values.items():
             if key == 'sparse':
                 if (self.ref_ring - val) != 0:
@@ -120,29 +107,31 @@ class _TimePREM:
                 raise ValueError("Incorrect result, invalid timing:"
                                     " %s != %s" % (self.ref_expr, val))
 
-    def time_prem_methods(self, method, n):
+    def time_prem_methods(self, n, method):
         self.values[str(method)] = self.func()
+
+    param_names = ['degree', 'Implementation_methods']
 
 
 class TimePREMLinearDenseQuadraticGCD(_LinearDenseQuadraticGCD, _TimePREM):
     """Calculate time for Linearly dense quartic inputs with quadratic GCDs polynomials."""
 
-    params = [('prem', 'poly', 'sparse'), (1, 3 , 5)] # This case is slow for n=8.
+    params = [(1, 3 , 5), ('prem', 'poly', 'sparse')] # This case is slow for n=8.
 
 
 class TimePREMQuadraticNonMonicGCD(_QuadraticNonMonicGCD, _TimePREM):
     """Calculate time for Quadratic non-monic GCD, F and G have other quadratic factors polynomials."""
 
-    params = [('prem', 'poly', 'sparse'), (1, 3 , 5)] # This case is slow for n=8.
+    params = [(1, 3 , 5), ('prem', 'poly', 'sparse')] # This case is slow for n=8.
 
 
 class TimePREMSparseGCDHighDegree(_SparseGCDHighDegree, _TimePREM):
     """Calculate Sparse GCD and inputs where degree is proportional to the number of variables polynomials."""
 
-    params = [('prem', 'poly', 'sparse'), (1, 3 , 5, 8)]
+    params = [(1, 3 , 5, 8), ('prem', 'poly', 'sparse')]
 
 
 class TimePREMSparseNonMonicQuadratic(_SparseNonMonicQuadratic, _TimePREM):
     """Calculate time for Sparse non-monic quadratic inputs with linear GCDs polynomials."""
 
-    params = [('prem', 'poly', 'sparse'), (1, 3 , 5, 8)]
+    params = [(1, 3 , 5, 8), ('prem', 'poly', 'sparse')]
