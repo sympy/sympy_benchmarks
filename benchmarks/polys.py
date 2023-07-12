@@ -88,15 +88,7 @@ class _TimePREM:
 
     def teardown(self, n, method):
         self.result = self.values[method]  # Get the result for the current method
-
-        if method == 'prem':
-            assert self.result == self.expected
-
-        elif method == 'poly':
-            assert self.result == self.expected
-
-        elif method == 'sparse':
-            assert self.result == self.expected
+        assert self.result == self.expected
 
     def time_prem_methods(self, n, method):
         self.values[str(method)] = self.func()
