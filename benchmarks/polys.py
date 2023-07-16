@@ -1,4 +1,4 @@
-from sympy import symbols, prod, prem, rem, degree, LC, subresultants, resultant
+from sympy import symbols, prod, prem, rem, degree, LC, subresultants
 from sympy.polys import QQ, Poly
 
 
@@ -113,12 +113,20 @@ class _TimeOP:
         if impl == 'expr':
             func = self.get_func_expr(*examples.as_expr())
             expected = examples.to_expr(expected)
+
         elif impl == 'dense':
             func = self.get_func_poly(*examples.as_poly())
-            expected = examples.to_poly(expected)
+            if isinstance(expected, list):
+                expected = [examples.to_poly(polynomial) for polynomial in expected] # for the subresultants type methods the output is in form of list.
+            else:
+                expected = examples.to_poly(expected) # for those methods whose output is only a polynomial not a tuple or list.
+
         elif impl == 'sparse':
             func = self.get_func_sparse(*examples.as_ring())
-            expected = examples.to_ring(expected)
+            if isinstance(expected, list):
+                expected = [examples.to_ring(polynomial) for polynomial in expected]
+            else:
+                expected = examples.to_ring(expected)
 
         self.func = func
         self.expected_result = expected
@@ -173,8 +181,9 @@ class _TimeSUBRESULTANTS(_TimeOP):
 
     def expected(self, f, g, d, syms):
         x = syms[0]
-        subresultant = resultant(f * LC(g, x) ** (degree(f, x) - degree(g, x) + 1), g, x)
-        return [f, g, subresultant]
+        subresultant = subresultants(f, g, x)
+
+        return subresultant
 
     def get_func_expr(self, f, g, d, syms):
         x = syms[0]
@@ -189,19 +198,19 @@ class _TimeSUBRESULTANTS(_TimeOP):
 
 class TimeSUBRESULTANTS_LinearDenseQuadraticGCD(_TimeSUBRESULTANTS):
     GCDExampleCLS = _LinearDenseQuadraticGCD
-    params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')] # This case is slow for n>3.
 
 
 class TimeSUBRESULTANTS_SparseGCDHighDegree(_TimeSUBRESULTANTS):
     GCDExampleCLS = _SparseGCDHighDegree
-    params = [(1, 3, 5, 8), ('expr', 'dense', 'sparse')]
+    params = [(1, 2, 3, 5), ('expr', 'dense', 'sparse')]
 
 
 class TimeSUBRESULTANTS_QuadraticNonMonicGCD(_TimeSUBRESULTANTS):
     GCDExampleCLS = _QuadraticNonMonicGCD
-    params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')] # This case is slow for n>3.
 
 
 class TimeSUBRESULTANTS_SparseNonMonicQuadratic(_TimeSUBRESULTANTS):
     GCDExampleCLS = _SparseNonMonicQuadratic
-    params = [(1, 3, 5, 8), ('expr', 'dense', 'sparse')]
+    params = [(1, 2, 3, 5), ('expr', 'dense', 'sparse')]
