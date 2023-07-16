@@ -1,4 +1,4 @@
-from sympy import symbols, prod, prem, rem, degree, LC
+from sympy import symbols, prod, prem, rem, degree, LC, subresultants, resultant
 from sympy.polys import QQ, Poly
 
 
@@ -61,6 +61,7 @@ class _LinearDenseQuadraticGCD(_GCDExample):
         g = d * (2 + x + sum(y[:n])) ** 2
         return f, g, d, syms
 
+
 class _SparseGCDHighDegree(_GCDExample):
     """A pair of polynomials in n symbols with a high degree sparse GCD."""
 
@@ -92,6 +93,7 @@ class _SparseNonMonicQuadratic(_GCDExample):
         f = d * (3 + x * prod(y[:n]))
         g = d * (-3 + x * prod(y[:n]))
         return f, g, d, syms
+
 
 class _TimeOP:
     """
@@ -162,5 +164,44 @@ class TimePREM_QuadraticNonMonicGCD(_TimePREM):
 
 
 class TimePREM_SparseNonMonicQuadratic(_TimePREM):
+    GCDExampleCLS = _SparseNonMonicQuadratic
+    params = [(1, 3, 5, 8), ('expr', 'dense', 'sparse')]
+
+
+class _TimeSUBRESULTANTS(_TimeOP):
+    """Benchmarks for pseudo-quotient method"""
+
+    def expected(self, f, g, d, syms):
+        x = syms[0]
+        subresultant = resultant(f * LC(g, x) ** (degree(f, x) - degree(g, x) + 1), g, x)
+        return [f, g, subresultant]
+
+    def get_func_expr(self, f, g, d, syms):
+        x = syms[0]
+        return lambda: subresultants(f, g, x)
+
+    def get_func_poly(self, f, g, d):
+        return lambda: f.subresultants(g)
+
+    def get_func_sparse(self, f, g, d, ring):
+        return lambda: f.subresultants(g)
+
+
+class TimeSUBRESULTANTS_LinearDenseQuadraticGCD(_TimeSUBRESULTANTS):
+    GCDExampleCLS = _LinearDenseQuadraticGCD
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
+
+
+class TimeSUBRESULTANTS_SparseGCDHighDegree(_TimeSUBRESULTANTS):
+    GCDExampleCLS = _SparseGCDHighDegree
+    params = [(1, 3, 5, 8), ('expr', 'dense', 'sparse')]
+
+
+class TimeSUBRESULTANTS_QuadraticNonMonicGCD(_TimeSUBRESULTANTS):
+    GCDExampleCLS = _QuadraticNonMonicGCD
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
+
+
+class TimeSUBRESULTANTS_SparseNonMonicQuadratic(_TimeSUBRESULTANTS):
     GCDExampleCLS = _SparseNonMonicQuadratic
     params = [(1, 3, 5, 8), ('expr', 'dense', 'sparse')]
