@@ -177,7 +177,7 @@ class TimePREM_SparseNonMonicQuadratic(_TimePREM):
 
 
 class _TimeSUBRESULTANTS(_TimeOP):
-    """Benchmarks for pseudo-quotient method"""
+    """Benchmarks for subresultants PRS method"""
 
     def expected(self, f, g, d, syms):
         x = syms[0]
