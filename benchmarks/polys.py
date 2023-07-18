@@ -52,7 +52,27 @@ class _GCDExample:
 
 
 class _LinearDenseQuadraticGCD(_GCDExample):
-    """A pair of linearly dense quartic inputs with quadratic GCDs"""
+    """A pair of linearly dense quartic inputs with quadratic GCDs.
+
+    This class generates benchmark examples with two polynomials, ``f`` and
+    ``g``, that are linearly dense quartic polynomials with quadratic GCDs. The
+    polynomials are constructed based on the input parameter ``n`.
+
+    Examples
+    ========
+
+    >>> example = _LinearDenseQuadraticGCD(3)
+    >>> f, g, d, syms = example.as_expr()
+    >>> f
+    (x - y1 - y2 - y3 - 2)**2*(x + y1 + y2 + y3 + 1)**2
+    >>> g
+    (x + y1 + y2 + y3 + 1)**2*(x + y1 + y2 + y3 + 2)**2
+    >>> d
+    (x + y1 + y2 + y3 + 1)**2
+    >>> syms
+    (x, y1, y2, y3)
+
+    """
 
     def make_poly(self, n):
         x, *y = syms = symbols("x, y1:{}".format(n+1))
@@ -63,7 +83,27 @@ class _LinearDenseQuadraticGCD(_GCDExample):
 
 
 class _SparseGCDHighDegree(_GCDExample):
-    """A pair of polynomials in n symbols with a high degree sparse GCD."""
+    """A pair of polynomials in n symbols with a high degree sparse GCD.
+
+    This class generates benchmark examples with two polynomials, ``f`` and
+    ``g``, that have a high degree sparse GCD. The polynomials are constructed
+    based on the input parameter ``n``.
+
+    Examples
+    ========
+
+    >>> example = _SparseGCDHighDegree(3)
+    >>> f, g, d, syms = example.as_expr()
+    >>> f
+    (x**4 + y1**4 + y2**4 + y3**4 - 2)*(x**4 + y1**4 + y2**4 + y3**4 + 1)
+    >>> g
+    (x**4 + y1**4 + y2**4 + y3**4 + 1)*(x**4 + y1**4 + y2**4 + y3**4 + 2)
+    >>> d
+    x**4 + y1**4 + y2**4 + y3**4 + 1
+    >>> syms
+    (x, y1, y2, y3)
+
+    """
 
     def make_poly(self, n):
         x, *y = syms = symbols("x, y1:{}".format(n+1))
@@ -74,7 +114,27 @@ class _SparseGCDHighDegree(_GCDExample):
 
 
 class _QuadraticNonMonicGCD(_GCDExample):
-    """A pair of quadratic polynomials with a non-monic GCD."""
+    """A pair of quadratic polynomials with a non-monic GCD.
+
+    This class generates benchmark examples with two quadratic polynomials,
+    ``f`` and ``g``, that have a non-monic GCD. The polynomials are constructed
+    based on the input parameter ``n``.
+
+    Examples
+    ========
+
+    >>> example = _QuadraticNonMonicGCD(3)
+    >>> f, g, d, syms = example.as_expr()
+    >>> f
+    (x**2*y1**2 + y2**2 + y3**2 + 1)*(x**2 - y1**2 + y2**2 + y3**2 - 1)
+    >>> g
+    (x*y1 + y2 + y3 + 2)**2*(x**2*y1**2 + y2**2 + y3**2 + 1)
+    >>> d
+    x**2*y1**2 + y2**2 + y3**2 + 1
+    >>> syms
+    (x, y1, y2, y3)
+
+    """
 
     def make_poly(self, n):
         x, *y = syms = symbols("x, y1:{}".format(n+1))
@@ -85,7 +145,27 @@ class _QuadraticNonMonicGCD(_GCDExample):
 
 
 class _SparseNonMonicQuadratic(_GCDExample):
-    """A pair of sparse non-monic quadratic polynomials with linear GCDs."""
+    """A pair of sparse non-monic quadratic polynomials with linear GCDs.
+
+    This class generates benchmark examples with two sparse non-monic quadratic
+    polynomials, ``f`` and ``g``, that have a linear GCD. The polynomials are
+    constructed based on the input parameter ``n``.
+
+    Examples
+    ========
+
+    >>> example = _SparseNonMonicQuadratic(3)
+    >>> f, g, d, syms = example.as_expr()
+    >>> f
+    (x*y1*y2*y3 - 1)*(x*y1*y2*y3 + 3)
+    >>> g
+    (x*y1*y2*y3 - 3)*(x*y1*y2*y3 - 1)
+    >>> d
+    x*y1*y2*y3 - 1
+    >>> syms
+    (x, y1, y2, y3)
+
+    """
 
     def make_poly(self, n):
         x, *y = syms = symbols("x, y1:{}".format(n+1))
@@ -157,23 +237,23 @@ class _TimePREM(_TimeOP):
 
 
 class TimePREM_LinearDenseQuadraticGCD(_TimePREM):
+    """This case involves linearly dense quartic inputs with quadratic GCDs.
+    The quadratic GCD suggests that the pseudo remainder method could be
+    applicable and potentially efficient for computing the GCD of these
+    polynomials."""
+
     GCDExampleCLS = _LinearDenseQuadraticGCD
     params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
 
 
-class TimePREM_SparseGCDHighDegree(_TimePREM):
-    GCDExampleCLS = _SparseGCDHighDegree
-    params = [(1, 3, 5, 8), ('expr', 'dense', 'sparse')]
-
-
 class TimePREM_QuadraticNonMonicGCD(_TimePREM):
+    """This case deals with quadratic polynomials having a non-monic GCD. The
+    non-monic aspect may introduce additional complexities, but the quadratic
+    nature suggests that the pseudo remainder method could be useful.
+    """
+
     GCDExampleCLS = _QuadraticNonMonicGCD
     params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
-
-
-class TimePREM_SparseNonMonicQuadratic(_TimePREM):
-    GCDExampleCLS = _SparseNonMonicQuadratic
-    params = [(1, 3, 5, 8), ('expr', 'dense', 'sparse')]
 
 
 class _TimeSUBRESULTANTS(_TimeOP):
@@ -203,7 +283,7 @@ class TimeSUBRESULTANTS_LinearDenseQuadraticGCD(_TimeSUBRESULTANTS):
 
 class TimeSUBRESULTANTS_SparseGCDHighDegree(_TimeSUBRESULTANTS):
     GCDExampleCLS = _SparseGCDHighDegree
-    params = [(1, 2, 3, 5), ('expr', 'dense', 'sparse')]
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
 
 
 class TimeSUBRESULTANTS_QuadraticNonMonicGCD(_TimeSUBRESULTANTS):
@@ -213,4 +293,4 @@ class TimeSUBRESULTANTS_QuadraticNonMonicGCD(_TimeSUBRESULTANTS):
 
 class TimeSUBRESULTANTS_SparseNonMonicQuadratic(_TimeSUBRESULTANTS):
     GCDExampleCLS = _SparseNonMonicQuadratic
-    params = [(1, 2, 3, 5), ('expr', 'dense', 'sparse')]
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
