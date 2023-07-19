@@ -48,7 +48,8 @@ class _GCDExample:
         return (self.to_poly(self.f), self.to_poly(self.g), self.to_poly(self.d))
 
     def as_ring(self):
-        return (self.to_ring(self.f), self.to_ring(self.g), self.to_ring(self.d), self.ring)
+        return (self.to_ring(self.f), self.to_ring(self.g), self.to_ring(self.
+        d), self.ring)
 
 
 class _LinearDenseQuadraticGCD(_GCDExample):
@@ -207,7 +208,8 @@ class _TimeOP:
         elif impl == 'sparse':
             func = self.get_func_sparse(*examples.as_ring())
             if isinstance(expected, list):
-                expected = [examples.to_ring(polynomial) for polynomial in expected]
+                expected = [examples.to_ring(polynomial) for polynomial in
+                            expected]
             else:
                 expected = examples.to_ring(expected)
 
@@ -246,7 +248,8 @@ class TimePREM_LinearDenseQuadraticGCD(_TimePREM):
     polynomials."""
 
     GCDExampleCLS = _LinearDenseQuadraticGCD
-    params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
+    # This case is slow for n>5.
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
 
 
 class TimePREM_QuadraticNonMonicGCD(_TimePREM):
@@ -256,7 +259,8 @@ class TimePREM_QuadraticNonMonicGCD(_TimePREM):
     """
 
     GCDExampleCLS = _QuadraticNonMonicGCD
-    params = [(1, 3, 5), ('expr', 'dense', 'sparse')] # This case is slow for n=8.
+    # This case is slow for n>5.
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
 
 
 class _TimeSUBRESULTANTS(_TimeOP):
@@ -281,7 +285,8 @@ class _TimeSUBRESULTANTS(_TimeOP):
 
 class TimeSUBRESULTANTS_LinearDenseQuadraticGCD(_TimeSUBRESULTANTS):
     GCDExampleCLS = _LinearDenseQuadraticGCD
-    params = [(1, 2, 3), ('expr', 'dense', 'sparse')] # This case is slow for n>3.
+    # This case is slow for n>3.
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')]
 
 
 class TimeSUBRESULTANTS_SparseGCDHighDegree(_TimeSUBRESULTANTS):
@@ -291,7 +296,8 @@ class TimeSUBRESULTANTS_SparseGCDHighDegree(_TimeSUBRESULTANTS):
 
 class TimeSUBRESULTANTS_QuadraticNonMonicGCD(_TimeSUBRESULTANTS):
     GCDExampleCLS = _QuadraticNonMonicGCD
-    params = [(1, 2, 3), ('expr', 'dense', 'sparse')] # This case is slow for n>3.
+    # This case is slow for n>3.
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')]
 
 
 class TimeSUBRESULTANTS_SparseNonMonicQuadratic(_TimeSUBRESULTANTS):
