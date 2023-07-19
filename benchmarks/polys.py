@@ -197,9 +197,12 @@ class _TimeOP:
         elif impl == 'dense':
             func = self.get_func_poly(*examples.as_poly())
             if isinstance(expected, list):
-                expected = [examples.to_poly(polynomial) for polynomial in expected] # for the subresultants type methods the output is in form of list.
+            # for the subresultants type methods the output is in form of list.
+                expected = [examples.to_poly(polynomial) for polynomial in
+                            expected]
             else:
-                expected = examples.to_poly(expected) # for those methods whose output is only a polynomial not a tuple or list.
+            # for those methods whose output is only a polynomial.
+                expected = examples.to_poly(expected)
 
         elif impl == 'sparse':
             func = self.get_func_sparse(*examples.as_ring())
