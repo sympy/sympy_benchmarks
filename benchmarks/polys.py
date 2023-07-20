@@ -48,8 +48,7 @@ class _GCDExample:
         return (self.to_poly(self.f), self.to_poly(self.g), self.to_poly(self.d))
 
     def as_ring(self):
-        return (self.to_ring(self.f), self.to_ring(self.g), self.to_ring(self.
-        d), self.ring)
+        return (self.to_ring(self.f), self.to_ring(self.g), self.to_ring(self.d), self.ring)
 
 
 class _LinearDenseQuadraticGCD(_GCDExample):
@@ -198,18 +197,16 @@ class _TimeOP:
         elif impl == 'dense':
             func = self.get_func_poly(*examples.as_poly())
             if isinstance(expected, list):
-            # for the subresultants type methods the output is in form of list.
-                expected = [examples.to_poly(polynomial) for polynomial in
-                            expected]
+                # some methods output a list of polynomials
+                expected = [examples.to_poly(p) for p in expected]
             else:
-            # for those methods whose output is only a polynomial.
+                # others output only a single polynomial.
                 expected = examples.to_poly(expected)
 
         elif impl == 'sparse':
             func = self.get_func_sparse(*examples.as_ring())
             if isinstance(expected, list):
-                expected = [examples.to_ring(polynomial) for polynomial in
-                            expected]
+                expected = [examples.to_ring(p) for p in expected]
             else:
                 expected = examples.to_ring(expected)
 
