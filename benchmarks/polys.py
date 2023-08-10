@@ -307,9 +307,9 @@ class _TimeGCD(_TimeOP):
 
     def expected(self, f, g, d, syms):
         x = syms[0]
-        gcd = gcd(f, g, x)
+        expected_gcd = gcd(f, g, x)
 
-        return gcd
+        return expected_gcd
 
     def get_func_expr(self, f, g, d, syms):
         x = syms[0]
