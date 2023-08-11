@@ -1,4 +1,4 @@
-from sympy import symbols, prod, prem, rem, degree, LC, subresultants
+from sympy import symbols, prod, prem, rem, degree, LC, subresultants, gcd
 from sympy.polys import QQ, Poly
 
 
@@ -298,5 +298,47 @@ class TimeSUBRESULTANTS_QuadraticNonMonicGCD(_TimeSUBRESULTANTS):
 
 
 class TimeSUBRESULTANTS_SparseNonMonicQuadratic(_TimeSUBRESULTANTS):
+    GCDExampleCLS = _SparseNonMonicQuadratic
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
+
+
+class _TimeGCD(_TimeOP):
+    """Benchmarks for GCDs method"""
+
+    def expected(self, f, g, d, syms):
+        x = syms[0]
+        expected_gcd = gcd(f, g, x)
+
+        return expected_gcd
+
+    def get_func_expr(self, f, g, d, syms):
+        x = syms[0]
+        return lambda: gcd(f, g, x)
+
+    def get_func_poly(self, f, g, d):
+        return lambda: f.gcd(g)
+
+    def get_func_sparse(self, f, g, d, ring):
+        return lambda: f.gcd(g)
+
+
+class TimeGCD_LinearDenseQuadraticGCD(_TimeGCD):
+    GCDExampleCLS = _LinearDenseQuadraticGCD
+    # This case is slow for n>3.
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')]
+
+
+class TimeGCD_SparseGCDHighDegree(_TimeGCD):
+    GCDExampleCLS = _SparseGCDHighDegree
+    params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
+
+
+class TimeGCD_QuadraticNonMonicGCD(_TimeGCD):
+    GCDExampleCLS = _QuadraticNonMonicGCD
+    # This case is slow for n>3.
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')]
+
+
+class TimeGCD_SparseNonMonicQuadratic(_TimeGCD):
     GCDExampleCLS = _SparseNonMonicQuadratic
     params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
