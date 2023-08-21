@@ -1,0 +1,8 @@
+[flake8]
+doctests = True
+ignore =
+    F403,
+select =
+    C4,
+    E722,
+    F,

@@ -1,0 +1,32 @@
+# ------------------------------------------------------------------ #
+#                                                                    #
+#           SymPy Benchmark CI script for Github Actions             #
+#                                                                    #
+#   Runs each time a pull request is opened, pushed or merged        #
+#                                                                    #
+# ------------------------------------------------------------------ #
+
+name: test
+on: [push, pull_request]
+jobs:
+
+  # -------------------- Code quality ------------------------------ #
+
+  code-quality:
+
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - run: python -m pip install --upgrade pip
+
+      - run: pip install flake8 ruff
+
+      - name: Run flake8 on the sympy benchmark package
+        run: flake8 benchmarks slow_benchmarks
+
+      - name: Run Ruff on the sympy benchmark package
+        run: ruff check .

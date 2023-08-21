@@ -96,10 +96,10 @@ class TimeMatrixPower:
             [     1/4 + 13*I/4,    -825/64 - 147*I/32,          21/8 + I,    -537/64 + 143*I/16,    -5/8 - 39*I/16,   2473/256 + 137*I/64,    -149/64 + 49*I/32,   -177/128 - 1369*I/128]]'''))
 
     def time_Case1(self):
-        m = self.Case1**4
+        _ = self.Case1**4
 
     def time_Case2(self):
-        m = self.Case2**4
+        _ = self.Case2**4
 
     def time_Case3(self):
-        m = self.Case3**4
+        _ = self.Case3**4
