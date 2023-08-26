@@ -1,4 +1,4 @@
-from sympy import symbols, prod, prem, rem, degree, LC, subresultants, gcd
+from sympy import symbols, prod, prem, rem, degree, LC, subresultants, gcd, I
 from sympy.polys import QQ, Poly
 
 
@@ -175,6 +175,36 @@ class _SparseNonMonicQuadratic(_GCDExample):
         return f, g, d, syms
 
 
+class _GaussianInteger(_GCDExample):
+    """An example of Polynomial using Gaussian Integer"""
+
+    def make_poly(self, n):
+        x, y1, y2, y3, y4, y5, y6 = syms =  symbols("x y1 y2 y3 y4 y5 y6")
+
+        d = (-x**3 + I*x**2 + x)**n
+
+        f = (-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) + \
+            -y1*y2/2 - y1*(y2 + 1)/2 - y1*(y3 + 1) - \
+            I*y4 + I*y6 + -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 - I*y5 + \
+            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - I*(y4 + y5) + \
+            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - I*(-y4 + y5) + \
+            y1*(y2 + 1) + -y1*y2 - y1*y3/2 - y1*(y3 + 1)/2 - I*y5 + -I*y6 + \
+            -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 + I*y5 + -y1*y2 + y1*(y3 + 1) + y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 + y1*y2 + y1*y3 + \
+            y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d
+
+        g = (-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) + \
+            -y1*y2/2 - y1*(y2 + 1)/2 - y1*(y3 + 1) - \
+            I*y4 + I*y6 + -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 - I*y5 + \
+            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - I*(y4 + y5) + \
+            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - \
+            I*(-y4 + y5) + y1*(y2 + 1) + -y1*y2 - y1*y3/2 - y1*(y3 + 1)/2 - \
+            I*y5 + -I*y6 + -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 + I*y5 + \
+            -y1*y2 + y1*(y3 + 1) + y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 + \
+            y1*y2 + y1*y3 + y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d
+
+        return f, g, d, syms
+
+
 class _TimeOP:
     """
     Benchmarks comparing Poly implementations of a given operation.
@@ -342,3 +372,23 @@ class TimeGCD_QuadraticNonMonicGCD(_TimeGCD):
 class TimeGCD_SparseNonMonicQuadratic(_TimeGCD):
     GCDExampleCLS = _SparseNonMonicQuadratic
     params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
+
+
+class _TimeGaussianInt(_TimeOP):
+    """Benchmarks for GCDs method when input is Gaussian Integer"""
+
+    def expected(self, f, g, d, syms):
+        expected_gcd = gcd(f, g)
+
+        return expected_gcd
+
+    def get_func_expr(self, f, g, d, syms):
+        return lambda: gcd(f, g)
+
+    def get_func_poly(self, f, g, d):
+        return lambda: f.gcd(g)
+
+
+class TimeGCD_GaussInt(_TimeGaussianInt):
+    GCDExampleCLS = _GaussianInteger
+    params = [(1, 2, 3), ('expr', 'dense')]
