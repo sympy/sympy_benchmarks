@@ -3,7 +3,8 @@
 from functools import reduce
 from operator import add
 
-from sympy import cse, exp, sin, symbols, tan, Matrix
+from sympy import (cse, exp, sin, symbols, tan, Matrix, ImmutableDenseMatrix,
+    MatAdd, MatMul, Transpose, Inverse, S, MatrixSymbol)
 
 
 def _get_args_exprs(nexprs, nterms):
