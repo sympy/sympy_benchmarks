@@ -1,4 +1,4 @@
-from sympy import symbols, prod, prem, rem, degree, LC, subresultants, gcd, I
+from sympy import symbols, prod, prem, rem, degree, LC, subresultants, gcd, I, ZZ_I
 from sympy.polys import QQ, Poly
 
 
@@ -183,24 +183,25 @@ class _GaussianInteger(_GCDExample):
 
         d = (-x**3 + I*x**2 + x)**n
 
-        f = (-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) + \
-            -y1*y2/2 - y1*(y2 + 1)/2 - y1*(y3 + 1) - \
-            I*y4 + I*y6 + -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 - I*y5 + \
-            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - I*(y4 + y5) + \
-            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - I*(-y4 + y5) + \
-            y1*(y2 + 1) + -y1*y2 - y1*y3/2 - y1*(y3 + 1)/2 - I*y5 + -I*y6 + \
-            -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 + I*y5 + -y1*y2 + y1*(y3 + 1) + y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 + y1*y2 + y1*y3 + \
-            y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d
+        f = ((-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) -
+            2*y1*y2 - 5*y1*(y2 + 1) - y1*(y3 + 1) -
+            I*y4 + I*y6 + -y1*(y2 + 1) - 3*y1*y3 - y1*(y3 + 1) - I*y5 -
+            2*y1*y2 - 7*y1*(y2 + 1) - 3*y1*y3 - 5*y1*(y3 + 1) - I*(y4 + y5) -
+            y1*y2 - 2*y1*(y2 + 1) - y1*y3 - 3*y1*(y3 + 1) - I*(-y4 + y5) +
+            y1*(y2 + 1) + -y1*y2 - 5*y1*y3 - y1*(y3 + 1) - I*y5 + -I*y6 -
+            3*y1*(y2 + 1) - y1*y3 - 7*y1*(y3 + 1) + I*y5 + -y1*y2 + y1*(y3 + 1)
+            + 5*y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 + y1*y2 + y1*y3 +
+            7*y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d)
 
-        g = (-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) + \
-            -y1*y2/2 - y1*(y2 + 1)/2 - y1*(y3 + 1) - \
-            I*y4 + I*y6 + -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 - I*y5 + \
-            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - I*(y4 + y5) + \
-            -y1*y2/2 - y1*(y2 + 1)/2 - y1*y3/2 - y1*(y3 + 1)/2 - \
-            I*(-y4 + y5) + y1*(y2 + 1) + -y1*y2 - y1*y3/2 - y1*(y3 + 1)/2 - \
-            I*y5 + -I*y6 + -y1*(y2 + 1) - y1*y3/2 - y1*(y3 + 1)/2 + I*y5 + \
-            -y1*y2 + y1*(y3 + 1) + y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 + \
-            y1*y2 + y1*y3 + y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d
+        g = ((-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) -
+            7*y1*y2 - y1*(y2 + 1) - y1*(y3 + 1) -
+            I*y4 + I*y6 - y1*(y2 + 1) - 3*y1*y3 - y1*(y3 + 1) - I*y5 -
+            y1*y2 - 7*y1*(y2 + 1) - 5*y1*y3 - 2*y1*(y3 + 1) - I*(y4 + y5) -
+            3*y1*y2 - 5*y1*(y2 + 1) - 9*y1*y3 - 7*y1*(y3 + 1) -
+            I*(-y4 + y5) + y1*(y2 + 1) + -y1*y2 - y1*y3 - y1*(y3 + 1) -
+            I*y5 + -I*y6 + -y1*(y2 + 1) - y1*y3 - y1*(y3 + 1) + I*y5 - 3*y1*y2
+            + y1*(y3 + 1) + y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 +
+            y1*y2 + y1*y3 + y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d)
 
         return f, g, d, syms
 
@@ -388,7 +389,9 @@ class _TimeGaussianInt(_TimeOP):
     def get_func_poly(self, f, g, d):
         return lambda: f.gcd(g)
 
+    def get_func_sparse(self, f, g, d, syms):
+        return lambda: f.gcd(g)
 
 class TimeGCD_GaussInt(_TimeGaussianInt):
     GCDExampleCLS = _GaussianInteger
-    params = [(1, 2, 3), ('expr', 'dense')]
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')]
