@@ -30,7 +30,7 @@ class _GCDExample:
         self.x = syms[0]
         self.y = syms[1:]
         self.syms = syms
-        self.ring = QQ[syms]
+        self.ring = Poly(f).domain[syms]
 
     def to_expr(self, expr):
         return expr
@@ -39,10 +39,7 @@ class _GCDExample:
         return Poly(expr, self.syms)
 
     def to_ring(self, expr):
-        try:
-            return self.ring(expr)
-        except:
-            return expr
+        return self.ring(expr)
 
     def as_expr(self):
         return (self.f, self.g, self.d, self.syms)
@@ -184,7 +181,7 @@ class _GaussianInteger(_GCDExample):
     def make_poly(self, n):
         x, y1, y2, y3, y4, y5, y6 = syms =  symbols("x y1 y2 y3 y4 y5 y6")
 
-        d = (-x + I*y1)**n
+        d = -x**n
 
         f = ((-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) -
             2*y1*y2 - 5*y1*(y2 + 1) - y1*(y3 + 1) -
@@ -229,7 +226,10 @@ class _TimeOP:
             expected = examples.to_expr(expected)
 
         elif impl == 'dense':
-            func = self.get_func_poly(*examples.as_poly())
+            if examples.ring.domain == ZZ_I:
+                func = self.get_func_poly(*examples.as_expr())
+            else:
+                func = self.get_func_poly(*examples.as_poly())
             if isinstance(expected, list):
                 # some methods output a list of polynomials
                 expected = [examples.to_poly(p) for p in expected]
@@ -238,10 +238,11 @@ class _TimeOP:
                 expected = examples.to_poly(expected)
 
         elif impl == 'sparse':
-            try:
+            if examples.ring.domain == ZZ_I:
+                func = self.get_func_sparse(*examples.as_expr())
+            else:
                 func = self.get_func_sparse(*examples.as_ring())
-            except:
-                func = self.get_func_expr(*examples.as_expr())
+
             if isinstance(expected, list):
                 expected = [examples.to_ring(p) for p in expected]
             else:
@@ -254,7 +255,15 @@ class _TimeOP:
         self.returned_result = self.func()
 
     def teardown(self, n, impl):
-        assert self.expected_result.as_expr() == self.returned_result.as_expr()
+        examples = self.GCDExampleCLS(n)
+        domain = examples.ring.domain
+        if domain != ZZ_I:
+            assert self.expected_result == self.returned_result
+        else:
+            if impl == 'expr' or impl == 'sparse':
+                assert self.expected_result == self.returned_result
+            else:
+                assert self.expected_result.as_expr() == self.returned_result.as_expr()
 
 
 class _TimePREM(_TimeOP):
@@ -392,12 +401,14 @@ class _TimeGaussianInt(_TimeOP):
     def get_func_expr(self, f, g, d, syms):
         return lambda: gcd(f, g)
 
-    def get_func_poly(self, f, g, d):
-        return lambda: f.gcd(g)
+    def get_func_poly(self, f, g, d, syms):
+        fp = Poly(f)
+        gp = Poly(g)
+        return lambda: fp.gcd(gp)
 
-    def get_func_sparse(self, f, g, d, syms):
-        fpe = ZZ_I[syms](f)
-        gpe = ZZ_I[syms](g)
+    def get_func_sparse(self, f, g, d, ring):
+        fpe = ZZ_I[ring](f)
+        gpe = ZZ_I[ring](g)
         return lambda: fpe.gcd(gpe)
 
 class TimeGCD_GaussInt(_TimeGaussianInt):
