@@ -376,25 +376,6 @@ class TimeGCD_SparseNonMonicQuadratic(_TimeGCD):
     params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
 
 
-class _TimeGaussianInt(_TimeOP):
-    """Benchmarks for GCDs method when input is Gaussian Integer"""
-
-    def expected(self, f, g, d, syms):
-        expected_gcd = gcd(f, g)
-
-        return expected_gcd
-
-    def get_func_expr(self, f, g, d, syms):
-        return lambda: gcd(f, g)
-
-    def get_func_poly(self, f, g, d):
-        return lambda: f.gcd(g)
-
-    def get_func_sparse(self, f, g, d, ring):
-        return lambda: f.gcd(g)
-
-
-
-class TimeGCD_GaussInt(_TimeGaussianInt):
+class TimeGCD_GaussInt( _TimeGCD):
     GCDExampleCLS = _GaussianInteger
     params = [(1, 2, 3), ('expr', 'dense', 'sparse')]
