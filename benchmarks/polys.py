@@ -1,4 +1,4 @@
-from sympy import symbols, prod, prem, rem, degree, LC, subresultants, gcd
+from sympy import symbols, prod, prem, rem, degree, LC, subresultants, gcd, I, ZZ_I
 from sympy.polys import QQ, Poly
 
 
@@ -23,14 +23,15 @@ class _GCDExample:
     """A benchmark example with two polynomials and their gcd."""
 
     def __init__(self, n):
-        f, g, d, syms = self.make_poly(n)
+        f, g, d, syms, domain = self.make_poly(n)
         self.f = f
         self.g = g
         self.d = d
         self.x = syms[0]
         self.y = syms[1:]
         self.syms = syms
-        self.ring = QQ[syms]
+        self.domain = domain
+        self.ring = domain[syms]
 
     def to_expr(self, expr):
         return expr
@@ -79,7 +80,7 @@ class _LinearDenseQuadraticGCD(_GCDExample):
         d = (1 + x + sum(y[:n])) ** 2
         f = d * (-2 + x - sum(y[:n])) ** 2
         g = d * (2 + x + sum(y[:n])) ** 2
-        return f, g, d, syms
+        return f, g, d, syms, QQ
 
 
 class _SparseGCDHighDegree(_GCDExample):
@@ -110,7 +111,7 @@ class _SparseGCDHighDegree(_GCDExample):
         d = 1 + x ** (n + 1) + sum([y[i] ** (n + 1) for i in range(n)])
         f = d * (-2 + x ** (n + 1) + sum([y[i] ** (n + 1) for i in range(n)]))
         g = d * (2 + x ** (n + 1) + sum([y[i] ** (n + 1) for i in range(n)]))
-        return f, g, d, syms
+        return f, g, d, syms, QQ
 
 
 class _QuadraticNonMonicGCD(_GCDExample):
@@ -141,7 +142,7 @@ class _QuadraticNonMonicGCD(_GCDExample):
         d = 1 + x ** 2 * y[0] ** 2 + sum([y[i] ** 2 for i in range(1, n)])
         f = d * (-1 + x ** 2 - y[0] ** 2 + sum([y[i] ** 2 for i in range(1, n)]))
         g = d * (2 + x * y[0] + sum(y[1:n])) ** 2
-        return f, g, d, syms
+        return f, g, d, syms, QQ
 
 
 class _SparseNonMonicQuadratic(_GCDExample):
@@ -172,8 +173,22 @@ class _SparseNonMonicQuadratic(_GCDExample):
         d = -1 + x * prod(y[:n])
         f = d * (3 + x * prod(y[:n]))
         g = d * (-3 + x * prod(y[:n]))
-        return f, g, d, syms
+        return f, g, d, syms, QQ
 
+
+class _GaussianInteger(_GCDExample):
+    """An example of Polynomial using Gaussian Integer"""
+
+    def make_poly(self, n):
+        x, y1, y2, y3, y4, y5 = syms =  symbols("x y1 y2 y3 y4 y5")
+
+        d = (-x + I*y1)*n
+
+        f = (-I*x**n - 2*y1*y3 - I*(-y2 + n) - I*(y4 + y5))*d
+
+        g = (-I*x**(n + 1) - 2*y1*(y3 + n) - I*(-y2 + n + 1) - I*(y4 + y5))*d
+
+        return f, g, d, syms, ZZ_I
 
 class _TimeOP:
     """
@@ -342,3 +357,8 @@ class TimeGCD_QuadraticNonMonicGCD(_TimeGCD):
 class TimeGCD_SparseNonMonicQuadratic(_TimeGCD):
     GCDExampleCLS = _SparseNonMonicQuadratic
     params = [(1, 3, 5), ('expr', 'dense', 'sparse')]
+
+
+class TimeGCD_GaussInt( _TimeGCD):
+    GCDExampleCLS = _GaussianInteger
+    params = [(1, 2, 3), ('expr', 'dense', 'sparse')]
