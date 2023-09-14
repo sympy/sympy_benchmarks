@@ -180,32 +180,15 @@ class _GaussianInteger(_GCDExample):
     """An example of Polynomial using Gaussian Integer"""
 
     def make_poly(self, n):
-        x, y1, y2, y3, y4, y5, y6 = syms =  symbols("x y1 y2 y3 y4 y5 y6")
+        x, y1, y2, y3, y4, y5 = syms =  symbols("x y1 y2 y3 y4 y5")
 
         d = (-x + I*y1)*n
 
-        f = ((-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) -
-            2*y1*y2 - 5*y1*(y2 + 1) - y1*(y3 + 1) -
-            I*y4 + I*y6 + -y1*(y2 + 1) - 3*y1*y3 - y1*(y3 + 1) - I*y5 -
-            2*y1*y2 - 7*y1*(y2 + 1) - 3*y1*y3 - 5*y1*(y3 + 1) - I*(y4 + y5) -
-            y1*y2 - 2*y1*(y2 + 1) - y1*y3 - 3*y1*(y3 + 1) - I*(-y4 + y5) +
-            y1*(y2 + 1) + -y1*y2 - 5*y1*y3 - y1*(y3 + 1) - I*y5 + -I*y6 -
-            3*y1*(y2 + 1) - y1*y3 - 7*y1*(y3 + 1) + I*y5 + -y1*y2 + y1*(y3 + 1)
-            + 5*y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 + y1*y2 + y1*y3 +
-            7*y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d)
+        f = (-I*x**n - 2*y1*y3 - I*(-y2 + n) - I*(y4 + y5))*d
 
-        g = ((-I*(x)**4 - (x)**3 + I*(x)**2 + (x) + -I*(y2 + 1) - y1*(y3 + 1) -
-            7*y1*y2 - y1*(y2 + 1) - y1*(y3 + 1) -
-            I*y4 + I*y6 - y1*(y2 + 1) - 3*y1*y3 - y1*(y3 + 1) - I*y5 -
-            y1*y2 - 7*y1*(y2 + 1) - 5*y1*y3 - 2*y1*(y3 + 1) - I*(y4 + y5) -
-            3*y1*y2 - 5*y1*(y2 + 1) - 9*y1*y3 - 7*y1*(y3 + 1) -
-            I*(-y4 + y5) + y1*(y2 + 1) + -y1*y2 - y1*y3 - y1*(y3 + 1) -
-            I*y5 + -I*y6 + -y1*(y2 + 1) - y1*y3 - y1*(y3 + 1) + I*y5 - 3*y1*y2
-            + y1*(y3 + 1) + y1*(y3 + 1) + -y1*y2 - y1*(y2 + 1) - y1*y3 +
-            y1*y2 + y1*y3 + y1*(y3 + 1) + y1*(y2 + 1) + y1*y3)*d)
+        g = (-I*x**(n + 1) - 2*y1*(y3 + n) - I*(-y2 + n + 1) - I*(y4 + y5))*d
 
         return f, g, d, syms, ZZ_I
-
 
 class _TimeOP:
     """
