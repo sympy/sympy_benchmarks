@@ -39,9 +39,9 @@ class TimeExpand:
         (C*(A + B)).expand()
         ((x*A*B*A**-1)**2).expand()
 
-    def time_expnad_radicals(self):
-        (((x+ y)**R(1, 2))**3).expand()
-        (1/((x+ y)**R(1, 2))**3).expand()
+    def time_expand_radicals(self):
+        (((x + y)**R(1, 2))**3).expand()
+        (1/((x + y)**R(1, 2))**3).expand()
 
     def time_expand_modulus(self):
         ((x + y)**11).expand(modulus=11)

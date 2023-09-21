@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-The evalutation of symbolic sum via the doit method got slowed by the introdution of Piecewise. Simple profiling suggest that piecewise_fold is taking up to 97% of the time.
+The evaluation of symbolic sum via the doit method got slowed by the introduction of Piecewise. Simple profiling suggest that piecewise_fold is taking up to 97% of the time.
 It worked much faster on 0.7.2(3) than on 1.0.
 """
-import sympy
+
 from sympy import symbols, Function, Sum, I, Symbol, KroneckerDelta
 
 int12Sigma, int22Sigma, exgg12SU2L, intgg11SU2L, intgg11SU2L, ext12Sigma, ext11Sigma, ext11Sigma, exgg22SU2L, intgg11SU2L, intgg11SU2L, ext22Sigma, ext31Sigma, ext31Sigma, exgg32SU2L, intgg21SU2L, intgg21SU2L, ext32Sigma, ext21Sigma, ext21Sigma, exgg42SU2L, intgg21SU2L, intgg21SU2L, ext42Sigma, ext41Sigma, ext41Sigma, int32ASU2L, int42ASU2L, int52ASU2L,  int62ASU2L, ext12Pi, ext11Pi, ext11Pi, exgg22SU2L, intgg11SU2L, intg11SU2L, ext22Pi, ext41Pi, int12Pi, int22Pi, ext32Pi, int62ASU2L, ext42Pi, exgg12SU2L, exgg32SU2L, intgg21SU2L, ext31Pi, exgg42SU2L, intgg21SU2L, intgg21SU2L, ext42Pi, ext21Pi, ext21Pi = symbols('int12Sigma int22Sigma exgg12SU2L intgg11SU2L intgg11SU2L ext12Sigma ext11Sigma ext11Sigma exgg22SU2L intgg11SU2L intgg11SU2L ext22Sigma ext31Sigma ext31Sigma exgg32SU2L intgg21SU2L intgg21SU2L ext32Sigma ext21Sigma ext21Sigma exgg42SU2L intgg21SU2L intgg21SU2L ext42Sigma ext41Sigma ext41Sigma int32ASU2L int42ASU2L int52ASU2L  int62ASU2L ext12Pi ext11Pi ext11Pi exgg22SU2L intgg11SU2L intg11SU2L ext22Pi ext41Pi int12Pi int22Pi ext32Pi int62ASU2L ext42Pi exgg12SU2L exgg32SU2L intgg21SU2L ext31Pi exgg42SU2L intgg21SU2L intgg21SU2L ext42Pi ext21Pi ext21Pi')

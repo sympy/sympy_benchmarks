@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import sympy
 from sympy import symbols, dsolve, Eq, Function, exp
 
 def _make_ode_01():

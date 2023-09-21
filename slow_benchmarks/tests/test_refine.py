@@ -1,7 +1,7 @@
 from __future__ import absolute_import
 
 import sympy
-from sympy import dsolve, Eq, exp, refine
+from sympy import Eq, exp, refine
 
 from slow_benchmarks.refine import _mk_piecewise_01
 
