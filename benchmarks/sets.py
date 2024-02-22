@@ -1,5 +1,6 @@
 import sympy as sp
-from sympy import Interval,S,Reals,Union
+from sympy import Interval,S,Reals,Union,ImageSet
+from sympy.abc import x
 """
 list of benchmarking set properties:
 1)set.boundary
@@ -10,6 +11,7 @@ list of benchmarking set properties:
 6)set.is_open
 7)set.kind
 8)set.measure
+9)set.sup
 """
 class TimeSetProperties:
     def setup(self):
@@ -29,7 +31,9 @@ class TimeSetProperties:
     def time_kind(self):
         Interval(0,1).kind 
     def time_measure(self):
-        Union(Interval(-1,2),Interval(4,5)).measure               
+        Union(Interval(-1,2),Interval(4,5)).measure  
+    def time_sup(self):
+        Union(Interval(0,1),Interval(2,3)).sup             
 """
 list of benchmarking set functions:
 1)set.complement()
@@ -40,7 +44,10 @@ list of benchmarking set functions:
 6)set.is_proper_superset()
 7)set.is_subset()/set.issubset()->as issubset() is alias is_subset().
 8)set.is_superset()/set.issuperset()->as issuperset() is alias is_superset().
-8)set.powerset()
+9)set.powerset()
+10)set.symmetric_difference()
+11)set.union()
+12)imageset()
 """
 class TimeSetFunctions:
     def  time_complement(self):
@@ -60,7 +67,13 @@ class TimeSetFunctions:
     def time_is_superset(self):
         Interval(0,1).is_superset(Interval(-2,4))
     def time_powerset(self):
-        Interval(0,1).powerset()    
+        Interval(0,1).powerset()   
+    def time_symmetric_difference(self):
+        Interval(0,1).symmetric_difference(S.Reals)   
+    def time_union(self):
+        Interval(0,1).union(Interval(4,5))    
+    def time_imageset(self):
+        ImageSet(x,2*x,Interval(0,2))      
 
                                      
 
