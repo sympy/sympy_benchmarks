@@ -1,5 +1,5 @@
 import sympy as sp
-from sympy import Interval,S,Reals,Union,ImageSet
+from sympy import Interval,S,Reals,Union,imageset
 from sympy.abc import x
 """
 list of benchmarking set properties:
@@ -73,7 +73,7 @@ class TimeSetFunctions:
     def time_union(self):
         Interval(0,1).union(Interval(4,5))    
     def time_imageset(self):
-        ImageSet(x,2*x,Interval(0,2))      
+        imageset(x, 2*x, Interval(0, 2))    
 
                                      
 
