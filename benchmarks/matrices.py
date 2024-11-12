@@ -37,17 +37,62 @@ class TimeMatrixExpression:
 
 class TimeDiagonalEigenvals:
     def setup(self):
-        def entry(i, j):
-            if i == j:
-                return i
-            elif i > j:
-                return j
-            else:
-                return 0
-        self.M = Matrix(5, 5, entry)
+        self.M = Matrix([
+            [0, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0],
+            [0, 1, 2, 0, 0],
+            [0, 1, 2, 3, 0],
+            [0, 1, 2, 3, 4]])
 
     def time_eigenvals(self):
         self.M.eigenvals()
+
+
+class TimeBlockDiagonalEigenvals:
+    """Benchmark examples obtained by similarly transforming random
+    block diagonal matrices with permutation matrices to make it look
+    like non block diagonal.
+
+    The original block matrices can be obtained by using
+    Matrix.connected_components_decomposition.
+    """
+    def setup(self):
+        self.m22 = Matrix([
+            [26, 0, 0, 7], [0, 27, 21, 0],
+            [0, 18, 89, 0], [13, 0, 0, 28]])
+        self.m222 = Matrix([
+            [37, 0, 0, 0, 0, 5], [0, 32, 0, 0, 33, 0], [0, 0, 78, 91, 0, 0],
+            [0, 0, 51, 97, 0, 0], [0, 97, 0, 0, 77, 0], [37, 0, 0, 0, 0, 61]])
+        self.m2222 = Matrix([
+            [87, 0, 12, 0, 0, 0, 0, 0], [0, 35, 0, 0, 0, 0, 0, 51],
+            [31, 0, 47, 0, 0, 0, 0, 0], [0, 0, 0, 84, 0, 41, 0, 0],
+            [0, 0, 0, 0, 70, 0, 57, 0], [0, 0, 0, 56, 0, 30, 0, 0],
+            [0, 0, 0, 0, 54, 0, 55, 0], [0, 61, 0, 0, 0, 0, 0, 0]])
+        self.m33 = Matrix([
+            [48, 0, 44, 0, 0, 67], [0, 16, 0, 28, 61, 0],
+            [5, 0, 5, 0, 0, 52], [0, 28, 0, 78, 13, 0],
+            [0, 3, 0, 52, 35, 0], [98, 0, 86, 0, 0, 70]])
+        self.m333 = Matrix([
+            [60, 0, 74, 0, 0, 0, 0, 39, 0], [0, 36, 0, 0, 14, 0, 10, 0, 0],
+            [33, 0, 32, 0, 0, 0, 0, 46, 0], [0, 0, 0, 9, 0, 46, 0, 0, 7],
+            [0, 51, 0, 0, 92, 0, 46, 0, 0], [0, 0, 0, 86, 0, 21, 0, 0, 16],
+            [0, 55, 0, 0, 28, 0, 12, 0, 0], [6, 0, 1, 0, 0, 0, 0, 31, 0],
+            [0, 0, 0, 61, 0, 59, 0, 0, 57]])
+
+    def time_eigenvals_22(self):
+        self.m22.eigenvals()
+
+    def time_eigenvals_222(self):
+        self.m222.eigenvals()
+
+    def time_eigenvals_2222(self):
+        self.m2222.eigenvals()
+
+    def time_eigenvals_33(self):
+        self.m33.eigenvals()
+
+    def time_eigenvals_333(self):
+        self.m333.eigenvals()
 
 
 class TimeMatrixGetItem:
