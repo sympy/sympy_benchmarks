@@ -57,7 +57,7 @@ class _TimeIntegrationRisch(object):
             ref = self.make_expr(n)
             if (ref - val.diff(x)).simplify() != 0:
                 raise ValueError("Incorrect result, invalid timing:"
-                                     " %s != %s" % (ref, val))
+                                 " %s != %s" % (ref, val))
 
     def time_doit(self, n):
         self.values['time_doit'] = self.integral.doit()
