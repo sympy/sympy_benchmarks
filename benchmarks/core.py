@@ -15,6 +15,11 @@ class TimeCoreArit:
     def time_Add_x1(self):
         x + 1
 
+    def time_Add_thousands(self):
+        # from https://github.com/sympy/sympy/pull/27254
+        a = symbols("a0:2000")
+        b = Add(*a);
+        b + a[0]
 
     def time_Add_1x(self):
         1 + x
