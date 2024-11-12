@@ -1,11 +1,8 @@
-*.pyc
-*/*.pyc
-*/*/*.pyc
-__pycache__/
-*/__pycache__/
-*/*/__pycache__/
-.cache/
+**.pyc
+**/__pycache__/
+.cache*/
 env/
 results/
 sympy/
 html/
+.python-version

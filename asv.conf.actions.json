@@ -1,4 +1,8 @@
 {
+    // This is the configuration file used for running the benchmarks from
+    // sympy_benchmarks in GitHub Actions. The commands that are run can be
+    // seen in run-benchmarks.yml.
+
     // The version of the config file format.  Do not change, unless
     // you know what you are doing.
     "version": 1,
@@ -22,7 +26,10 @@
 
     // List of branches to benchmark. If not provided, defaults to "master"
     // (for git) or "tip" (for mercurial).
-    // "branches": ["master"], // for git
+
+    // This list needs to be updated after each release of sympy. The branch to
+    // be checked should always be the previous release.
+    "branches": ["1.12", "master", "HEAD"], // for git
     // "branches": ["tip"],    // for mercurial
 
     // The DVCS being used.  If not set, it will be automatically
@@ -36,23 +43,23 @@
     // If missing or the empty string, the tool will be automatically
     // determined by looking for tools on the PATH environment
     // variable.
-    "environment_type": "conda",
+    "environment_type": "virtualenv",
 
     // the base URL to show a commit for the project.
     "show_commit_url": "http://github.com/sympy/sympy/commit/",
 
     // The Pythons you'd like to test against.  If not provided, defaults
     // to the current version of Python used to run `asv`.
-    // "pythons": ["2.7", "3.6"],
+    "pythons": ["3.10"],
 
     // The matrix of dependencies to test.  Each key is the name of a
     // package (in PyPI) and the values are version numbers.  An empty
     // list indicates to just test against the default (latest)
     // version.
     "matrix": {
-        "fastcache": [],
-        "mpmath": [],
-        "numpy": [],
+        "pip+fastcache": [],
+        "pip+mpmath": [],
+        "pip+numpy": []
     },
 
     // The directory (relative to the current directory) that benchmarks are
@@ -63,10 +70,9 @@
     // environments in.  If not provided, defaults to "env"
     // "env_dir": "env",
 
-
     // The directory (relative to the current directory) that raw benchmark
     // results are stored in.  If not provided, defaults to "results".
-    // "results_dir": "results",
+    // "results_dir": "results"
 
     // The directory (relative to the current directory) that the html tree
     // should be written to.  If not provided, defaults to "html".

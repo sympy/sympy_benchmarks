@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
-import sympy
-
 class TimeMatrixOperations:
     # first param is the size of the matrix, second is the number of symbols in it
-    params = ((6,10), (0, 2, 5))
+    params = ((6, 10), (0, 2, 5))
 
     def setup(self, n, num_symbols):
         from sympy import Matrix, Symbol
