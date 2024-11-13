@@ -8,6 +8,10 @@ x, y, z = symbols('x,y,z')
 p = 3*x**2*y*z**7 + 7*x*y*z**2 + 4*x + x*y**4
 e = (x + y + z + 1)**32
 
+a5000 = symbols("a0:5000")
+sum_a5000 = Add(*a5000);
+
+
 class Time_Arit:
     def time_neg(self):
         -x
@@ -29,9 +33,7 @@ class Time_Arit:
 
     def time_Add_thousands(self):
         # from https://github.com/sympy/sympy/pull/27254
-        a = symbols("a0:2000")
-        b = Add(*a);
-        b + a[0]
+        sum_a5000 + a5000[0]
 
     def time_Mul_xy(self):
         x*y
