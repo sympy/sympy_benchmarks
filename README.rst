@@ -42,7 +42,7 @@ or in conda environment, use
 
     $ conda install -c conda-forge asv
 
-If you're not using conda, you also needs to have ``virtualenv``
+If you're not using conda, you also need to have ``virtualenv``
 installed.
 
 ::
@@ -52,20 +52,20 @@ installed.
 Running the benchmarks
 ^^^^^^^^^^^^^^^^^^^^^^
 
-To quickly try out the benchmarks (e.g. while developing a new benchmark
-you can run it against a single commit on sympy master:
+To quickly try out the benchmarks (e.g., while developing a new benchmark),
+you can run it against a single commit on SymPy master.
 
 ::
 
-    $ asv --quick "HEAD^!"
+    $ asv run --quick "HEAD^!"
 
-If you work with ``conda`` , you should change the
+If you work with ``conda``, you should change the
 ``"environment_type"`` entry in ``asv.conf.json`` from ``"virtualenv"``
 to ``"conda"``. Or you can use,
 
 ::
 
-    $ asv --config asv.conf.conda.json --quick "HEAD^!"
+    $ asv run --config asv.conf.conda.json --quick "HEAD^!"
 
 You can also run a specific benchmark based on the function or class
 name in ``benchmarks/`` or ``slow_benchmarks/`` folder.
