@@ -2,6 +2,10 @@
 Benchmark for DomainMatrix.to_DM(extension=True) performance.
 This script demonstrates the massive performance gap between pure Python
 and python-flint when computing primitive elements for high-degree extensions.
+
+Can be run in two ways:
+1. As a standalone script: python benchmarks/bench_dm_extension.py
+2. With ASV: asv run --bench bench_dm_extension --python=same
 """
 import sys
 import time
@@ -10,12 +14,32 @@ import pstats
 from io import StringIO
 from sympy import Matrix, sqrt
 from sympy.polys.domains import QQ
+
 # --- CONFIGURATION ---
-# N=6 creates a field of degree 2^6 = 64.
-# In pure Python, this usually takes 10-30 seconds.
+# N=10 creates a field of degree 2^10 = 1024.
+# In pure Python, this usually takes 4-8 seconds.
 # With FLINT, this takes < 0.1 seconds.
 # Warning: Setting N >= 12 without FLINT may freeze your computer for minutes.
 NUM_SURDS = 10
+
+
+# --- ASV BENCHMARK CLASS ---
+class TimeDomainMatrixExtension:
+    """
+    ASV Benchmark class for DomainMatrix.to_DM(extension=True) performance.
+    """
+    
+    def setup(self):
+        """Generate a matrix with NUM_SURDS independent square roots."""
+        surds = [sqrt(i) for i in range(2, 2 + NUM_SURDS)]
+        self.mat = Matrix([[s] for s in surds])
+    
+    def time_to_DM_extension(self):
+        """Time the critical to_DM(extension=True) operation."""
+        self.mat.to_DM(extension=True)
+
+
+# --- STANDALONE SCRIPT FUNCTIONS ---
 
 def get_matrix(n):
     """Generates a matrix with n independent square roots."""
@@ -26,8 +50,8 @@ def get_matrix(n):
 
 def run_benchmark():
     print("--- BENCHMARK CONFIGURATION ---")
-    print("Generators (N): {NUM_SURDS}")
-    print("Field Degree:   2^{NUM_SURDS} = {2**NUM_SURDS}")
+    print(f"Generators (N): {NUM_SURDS}")
+    print(f"Field Degree:   2^{NUM_SURDS} = {2**NUM_SURDS}")
     # Check if FLINT is currently active in SymPy
     # SymPy's QQ domain will have a library attribute if FLINT is used
     try:
@@ -41,7 +65,7 @@ def run_benchmark():
         status = "INSTALLED & ACTIVE (Fast Path)"
     else:
         status = "NOT INSTALLED (Slow Pure-Python Path)"
-    print("Backend:        {status}")
+    print(f"Backend:        {status}")
     print("-" * 60)
     mat = get_matrix(NUM_SURDS)
     print("Running to_DM(extension=True)...")
@@ -52,8 +76,8 @@ def run_benchmark():
     end_time = time.time()
     elapsed = end_time - start_time
     print("Done.")
-    print("Elapsed Time:   {elapsed:.4f} seconds")
-    print("Result Domain:  {dm.domain}")
+    print(f"Elapsed Time:   {elapsed:.4f} seconds")
+    print(f"Result Domain:  {dm.domain}")
     print("-" * 60)
 
 def run_profiler():
