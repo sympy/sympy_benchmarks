@@ -11,7 +11,7 @@ jobs:
     steps:
 
       - name: Checkout SymPy Benchmarks
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
 
       - name: Setup Python
         uses: actions/setup-python@v3
