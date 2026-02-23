@@ -1,4 +1,4 @@
-from sympy import Symbol, Matrix, latex, log
+from sympy import Symbol, Matrix, latex, log, atan2
 
 
 class TimeMatrixPrinting:
@@ -32,8 +32,8 @@ class TimePolyPrintin:
         latex(self.expr)
 
 
-class TimeNestedExprPrinting:
-    """Benchmark for deep nested trees structure"""
+class TimeNestedLogPrinting:
+    """Benchmark for deep nested trees structure using log function"""
     params = [10, 50, 100]
 
     def setup(self, n):
@@ -41,6 +41,25 @@ class TimeNestedExprPrinting:
         expr = x
         for _ in range(n):
             expr = log(expr)
+
+        self.expr = expr
+
+    def time_str(self, n):
+        str(self.expr)
+
+    def time_latex(self, n):
+        latex(self.expr)
+
+
+class TimeNestedAtan2Printing:
+    """Benchmark for deep nested trees structure using atan2 function"""
+    params = [2, 5, 10]
+
+    def setup(self, n):
+        x = Symbol('x')
+        expr = x
+        for _ in range(n):
+            expr = atan2(expr, expr)
 
         self.expr = expr
 
