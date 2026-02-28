@@ -1,6 +1,8 @@
 SymPy's Benchmark Suite
 -----------------------
 
+EDIT
+
 |airspeedvelocity| |image1|
 
 This is the benchmark suite for
