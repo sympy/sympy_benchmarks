@@ -1,0 +1,64 @@
+name: CodSpeed Benchmarks
+
+# Run on every push to master and on every PR so CodSpeed can detect
+# performance regressions and post a report as a PR comment.
+#
+# `workflow_dispatch` allows CodSpeed to trigger backtest analysis to
+# generate initial baseline data.
+#
+# References:
+#   Issue: https://github.com/sympy/sympy/issues/21374
+#   CodSpeed docs: https://docs.codspeed.io/integrations/ci/github-actions
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  benchmarks:
+    name: Run CodSpeed benchmarks
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Required for OIDC-based authentication with CodSpeed.
+      # This is optional for public repositories (token can be omitted),
+      # but recommended so results are attributed to the correct PR/commit.
+      contents: read
+      id-token: write
+
+    steps:
+      - name: Checkout sympy_benchmarks
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install SymPy and benchmark dependencies
+        run: |
+          python -m pip install --upgrade pip
+          # Install latest SymPy from source so benchmarks track master
+          pip install "sympy[dev] @ git+https://github.com/sympy/sympy.git@master"
+          # Install pytest and the CodSpeed plugin
+          pip install pytest pytest-codspeed
+          # Optional numerical dependencies used by some benchmarks
+          pip install numpy mpmath
+
+      - name: Run CodSpeed benchmarks
+        uses: CodSpeedHQ/action@v4
+        with:
+          # "simulation" mode uses Valgrind/Callgrind to count CPU instructions.
+          # This gives hardware-independent, noise-free results ideal for CI.
+          # See: https://docs.codspeed.io/instruments/
+          mode: simulation
+          run: >
+            pytest benchmarks/codspeed/
+            --codspeed
+            -v
+          # token is optional for public repos; add CODSPEED_TOKEN secret
+          # in repo settings for authenticated uploads.
+          # token: ${{ secrets.CODSPEED_TOKEN }}
