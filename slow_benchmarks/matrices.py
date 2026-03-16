@@ -1,4 +1,4 @@
-from sympy import Matrix, symbols, SparseMatrix
+from sympy import Matrix, Rational, SparseMatrix, sqrt, symbols
 from sympy import S
 from sympy.simplify.simplify import simplify
 
@@ -51,6 +51,13 @@ DE = Matrix(S('''[
             [                0,                     0,                 0, -2063/256 + 541*y/128],
             [                0,                     0,                 0,                     0],
             [                0,   2473/256 + 137*z/64,                 0,                     0]]'''))
+EE = Matrix([
+            [45, 15, 20, 18, sqrt(5)/2],
+            [15, 85, 35, 22, Rational(11, 37)],
+            [20, 35, 15, 40, 3*sqrt(3)/7],
+            [Rational(9, 2), 2, 4, 12, sqrt(7)/5],
+            [Rational(25, 13), sqrt(7)/4, 2, 1, 1]
+        ])
 
 # diagonalizable
 AD = Matrix([
@@ -141,24 +148,28 @@ class TimeEigenVects:
     def time_B(self): BE.eigenvects()
     def time_C(self): CE.eigenvects()
     def time_D(self): DE.eigenvects()
+    def time_E(self): EE.eigenvects()
 
     if _TEST_SIMPLIFY:
         def time_A_simplify(self): [simplify(e) for e in sum((e[2] for e in AE.eigenvects()), [])]
         def time_B_simplify(self): [simplify(e) for e in sum((e[2] for e in BE.eigenvects()), [])]
         def time_C_simplify(self): [simplify(e) for e in sum((e[2] for e in CE.eigenvects()), [])]
         def time_D_simplify(self): [simplify(e) for e in sum((e[2] for e in DE.eigenvects()), [])]
+        def time_E_simplify(self): [simplify(e) for e in sum((e[2] for e in EE.eigenvects()), [])]
 
 class TimeLeftEigenVects:
     def time_A(self): AE.left_eigenvects()
     def time_B(self): BE.left_eigenvects()
     def time_C(self): CE.left_eigenvects()
     def time_D(self): DE.left_eigenvects()
+    def time_E(self): EE.left_eigenvects()
 
     if _TEST_SIMPLIFY:
         def time_A_simplify(self): [simplify(e) for e in AE.left_eigenvects()]
         def time_B_simplify(self): [simplify(e) for e in BE.left_eigenvects()]
         def time_C_simplify(self): [simplify(e) for e in CE.left_eigenvects()]
         def time_D_simplify(self): [simplify(e) for e in DE.left_eigenvects()]
+        def time_E_simplify(self): [simplify(e) for e in EE.left_eigenvects()]
 
 class TimeDetBerkowitz:
     def time_A(self): A.det('berkowitz')
