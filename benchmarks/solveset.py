@@ -27,7 +27,7 @@ class TimeSolvesetTrigonometric:
 
     # Trigonometric functions increase their time complexity non-linearly. We use small params to test them:
     # param = 5 is an edge case (scaling from ~26ms to ~61ms), and param = 6 causes an ASV timeout.
-    params = [1,2,5]
+    params = [1,3,5]
 
     def setup(self,n):
         self.x = Symbol('x')
@@ -74,9 +74,9 @@ class TimeSolvesetRational:
 class TimeSolvesetIrrational:
     '''Benchmark for Solveset irrational functions calculation'''
 
-    # When the domain is complex, param = 10 is an edge case: causes an ASV timeout.
+    # When the domain is complex, param = 7 is an edge case: causes an ASV timeout.
     # When the domain is real, solveset works perfectly and fast with every param.
-    params = [1,5,8]
+    params = [1,3,5]
 
     def setup(self,n):
         self.x = Symbol('x')
