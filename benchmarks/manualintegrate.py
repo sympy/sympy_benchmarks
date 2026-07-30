@@ -121,6 +121,11 @@ class TimeManualIntegrateSymbolicQuadratic:
 
 
 class TimeManualIntegrateSpecialFunction:
+    # sympy master is currently much slower than 1.14 on these integrands
+    # (Ei(x)*Si(x) alone exceeds asv's default 60 second timeout on CI), so
+    # allow enough time for asv's warmup and repeat calls to complete.
+    timeout = 600
+
     params = [
         Ei(x) * Si(x),
         Ei(x) * Shi(x),
