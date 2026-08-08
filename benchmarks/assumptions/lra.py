@@ -1,123 +1,16 @@
-import glob
-import os
 import random
-import re
-import signal
-import time
-from functools import cache
-from inspect import signature
 
 from sympy import Symbol, Q
 from sympy.assumptions.cnf import CNF, EncodedCNF
+from sympy.assumptions.lra_satask import lra_satask
 from sympy.core.add import Add
 from sympy.core.relational import Eq
-try:
-    from sympy.logic.algorithms.internal import dpll_satisfiable
-except ImportError:
-    from sympy.logic.algorithms.dpll2 import dpll_satisfiable
+from sympy.logic.algorithms.dpll2 import dpll_satisfiable
 from sympy.logic.algorithms.lra_theory import LRASolver
 from sympy.logic.boolalg import And, Or, Not
 
-STATUS = re.compile(r':status\s+(sat|unsat)')
-
 RELATIONS = [lambda a, b: a <= b, lambda a, b: a < b,
              lambda a, b: a >= b, lambda a, b: a > b]
-
-
-@cache
-def lra_ask():
-    try:
-        from sympy.assumptions.smtask import smtask
-    except ImportError:
-        from sympy.assumptions.lra_satask import lra_satask
-        return lra_satask
-    return lambda prop, assumptions: smtask(prop, assumptions,
-                                            theory_solvers=[LRASolver])
-
-
-@cache
-def lra_kwargs():
-    params = signature(dpll_satisfiable).parameters
-    if 'theory_solvers' in params:
-        return {'theory_solvers': [LRASolver]}
-    if 'theory_solver' in params:
-        return {'theory_solver': LRASolver}
-    return {'use_lra_theory': True}
-
-
-def _timeout(signum, frame):
-    raise TimeoutError
-
-
-def suite_files():
-    directory = os.environ.get(
-        'QF_LRA_DIR', os.path.expanduser('~/Downloads/non-incremental/QF_LRA'))
-    if not os.path.isdir(directory):
-        raise NotImplementedError('%s does not exist' % directory)
-    paths = sorted(glob.glob(os.path.join(directory, '**', '*.smt2'),
-                             recursive=True))
-    limit = int(os.environ.get('QF_LRA_LIMIT', 100))
-    max_bytes = int(os.environ.get('QF_LRA_MAX_BYTES', 100000))
-    paths = [p for p in paths if os.path.getsize(p) <= max_bytes]
-    return paths[::max(1, len(paths) // limit)][:limit]
-
-
-def suite_formula(source):
-    from sympy.assumptions.assume import AppliedPredicate
-    from sympy.parsing.smtlib import parse_smtlib
-    _, assertions = parse_smtlib(source)
-    return And(*[a for a in assertions if not isinstance(a, AppliedPredicate)])
-
-
-def file_outcome(path, seconds):
-    source = open(path).read()
-    status = STATUS.search(source)
-    if not status:
-        return 'unknown', 0.0
-    expected = status.group(1) == 'sat'
-    signal.alarm(seconds)
-    start = time.perf_counter()
-    try:
-        answer = bool(dpll_satisfiable(suite_formula(source), **lra_kwargs()))
-        result = 'ok' if answer is expected else 'wrong'
-    except TimeoutError:
-        result = 'timeout'
-    except Exception:
-        result = 'error'
-    finally:
-        signal.alarm(0)
-    return result, time.perf_counter() - start
-
-
-class Suite:
-
-    timeout = 3600
-
-    def setup(self):
-        signal.signal(signal.SIGALRM, _timeout)
-        seconds = int(os.environ.get('QF_LRA_TIMEOUT', 10))
-        self.results = [file_outcome(p, seconds) for p in suite_files()]
-
-    def track_files(self):
-        return len(self.results)
-
-    def track_accepted(self):
-        return sum(o in ('ok', 'wrong') for o, _ in self.results)
-
-    def track_correct(self):
-        return sum(o == 'ok' for o, _ in self.results)
-
-    def track_timeout(self):
-        return sum(o == 'timeout' for o, _ in self.results)
-
-    def track_accepted_time(self):
-        return sum(t for o, t in self.results if o in ('ok', 'wrong'))
-
-    track_files.unit = 'files'
-    track_accepted.unit = 'files'
-    track_correct.unit = 'files'
-    track_timeout.unit = 'files'
-    track_accepted_time.unit = 'seconds'
 
 
 def random_formula(n_vars, n_atoms, n_clauses, clause_len, terms, seed):
@@ -161,22 +54,24 @@ def disjunctive_chain(n):
 
 
 class CommonQueries:
-
+    """
+    Very small queries that sympy could have used internally.
+    """
     def setup(self):
         self.x = Symbol('x', real=True)
         self.y = Symbol('y', real=True)
 
     def time_positive_from_bound(self):
-        lra_ask()(Q.positive(self.x), Q.gt(self.x, 1))
+        lra_satask(Q.positive(self.x), Q.gt(self.x, 1))
 
     def time_transitive_two_vars(self):
-        lra_ask()(Q.gt(self.x, 0), Q.gt(self.x, self.y) & Q.gt(self.y, 0))
+        lra_satask(Q.gt(self.x, 0), Q.gt(self.x, self.y) & Q.gt(self.y, 0))
 
     def time_zero_from_bounds(self):
-        lra_ask()(Q.zero(self.x), Q.ge(self.x, 0) & Q.le(self.x, 0))
+        lra_satask(Q.zero(self.x), Q.ge(self.x, 0) & Q.le(self.x, 0))
 
     def time_unknown(self):
-        lra_ask()(Q.positive(self.x + self.y), Q.positive(self.x))
+        lra_satask(Q.positive(self.x + self.y), Q.positive(self.x))
 
 
 class RandomAll:
@@ -196,7 +91,7 @@ class RandomAll:
 
     def time_satisfiable(self, size):
         for f in self.formulas:
-            dpll_satisfiable(f, **lra_kwargs())
+            dpll_satisfiable(f, use_lra_theory=True)
 
 
 class Backtracking:
@@ -213,17 +108,19 @@ class Backtracking:
         self.chain_formula = disjunctive_chain(self.chain[size])
 
     def time_scheduling_sat(self, size):
-        dpll_satisfiable(self.sat_schedule, **lra_kwargs())
+        dpll_satisfiable(self.sat_schedule, use_lra_theory=True)
 
     def time_scheduling_unsat(self, size):
-        dpll_satisfiable(self.unsat_schedule, **lra_kwargs())
+        dpll_satisfiable(self.unsat_schedule, use_lra_theory=True)
 
     def time_disjunctive_chain(self, size):
-        dpll_satisfiable(self.chain_formula, **lra_kwargs())
+        dpll_satisfiable(self.chain_formula, use_lra_theory=True)
 
 
 class TheorySolver:
-
+    """
+    TheorySolver internal method(s)
+    """
     params = ['small', 'medium', 'large']
     param_names = ['size']
     sizes = RandomAll.sizes
@@ -241,10 +138,6 @@ class TheorySolver:
 
     def time_assert_and_check(self, size):
         solver, _ = LRASolver.from_encoded_cnf(self.encoded)
-        if hasattr(solver, 'assert_lit'):
-            for lit in self.literals:
-                solver.assert_lit(lit)
-            solver.check()
-        else:
-            solver.notify_assignment(self.literals)
-            solver.check_model([])
+        for lit in self.literals:
+            solver.assert_lit(lit)
+        solver.check()
